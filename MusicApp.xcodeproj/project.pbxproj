@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD67C87629CB3297003E948E /* music1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87529CB3297003E948E /* music1.mp3 */; };
+		AD67C87829CB32A8003E948E /* music2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87729CB32A8003E948E /* music2.mp3 */; };
+		AD67C87A29CB32B3003E948E /* music3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87929CB32B3003E948E /* music3.mp3 */; };
 		AD81782B29CAD29B0057FCCB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD81782A29CAD29B0057FCCB /* AppDelegate.swift */; };
 		AD81782D29CAD29B0057FCCB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD81782C29CAD29B0057FCCB /* SceneDelegate.swift */; };
 		AD81782F29CAD29B0057FCCB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD81782E29CAD29B0057FCCB /* ViewController.swift */; };
@@ -16,6 +19,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AD67C87529CB3297003E948E /* music1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music1.mp3; sourceTree = "<group>"; };
+		AD67C87729CB32A8003E948E /* music2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music2.mp3; sourceTree = "<group>"; };
+		AD67C87929CB32B3003E948E /* music3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music3.mp3; sourceTree = "<group>"; };
 		AD81782729CAD29B0057FCCB /* MusicApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD81782A29CAD29B0057FCCB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AD81782C29CAD29B0057FCCB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +43,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AD67C87429CB3285003E948E /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				AD67C87529CB3297003E948E /* music1.mp3 */,
+				AD67C87729CB32A8003E948E /* music2.mp3 */,
+				AD67C87929CB32B3003E948E /* music3.mp3 */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		AD81781E29CAD29B0057FCCB = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +72,7 @@
 		AD81782929CAD29B0057FCCB /* MusicApp */ = {
 			isa = PBXGroup;
 			children = (
+				AD67C87429CB3285003E948E /* Audio */,
 				AD81782A29CAD29B0057FCCB /* AppDelegate.swift */,
 				AD81782C29CAD29B0057FCCB /* SceneDelegate.swift */,
 				AD81782E29CAD29B0057FCCB /* ViewController.swift */,
@@ -127,6 +144,9 @@
 			files = (
 				AD81783729CAD29C0057FCCB /* LaunchScreen.storyboard in Resources */,
 				AD81783429CAD29C0057FCCB /* Assets.xcassets in Resources */,
+				AD67C87A29CB32B3003E948E /* music3.mp3 in Resources */,
+				AD67C87629CB3297003E948E /* music1.mp3 in Resources */,
+				AD67C87829CB32A8003E948E /* music2.mp3 in Resources */,
 				AD81783229CAD29B0057FCCB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
