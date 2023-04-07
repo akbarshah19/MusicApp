@@ -53,21 +53,58 @@ class PlayerViewController: UIViewController {
         return label
     }()
     
+    private var progressView = UIProgressView()
+    private var timeCount = UILabel()
+    private var timeLeft = UILabel()
+    
     var player: AVAudioPlayer?
     let playPauseBtn = UIButton()
+    var timer = Timer()
+    
+    var totalTime: Double = 0.0
+    var timeElapsed: Double = 0.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         if holder.subviews.count == 0 {
             configure()
         }
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCount), userInfo: nil, repeats: true)
+    }
+    
+    @objc func timerCount() {
+        timeElapsed += 1
+        progressView.progress += 1/Float(totalTime)
+        
+        if timeElapsed < 10 {
+            timeCount.text = "0:0\(timeFormatter(interval: timeElapsed))"
+        } else if timeElapsed <= 59 {
+            timeCount.text = "0:\(timeFormatter(interval: timeElapsed))"
+        } else {
+            timeCount.text = timeFormatter(interval: timeElapsed)
+        }
+        
+        if totalTime - timeElapsed < 10 {
+            timeLeft.text = "-0:0\(timeFormatter(interval: totalTime - timeElapsed))"
+        } else if totalTime - timeElapsed < 60 {
+            timeLeft.text = "-0:\(timeFormatter(interval: totalTime - timeElapsed))"
+        } else {
+            timeLeft.text = "-\(timeFormatter(interval: totalTime - timeElapsed))"
+        }
+    }
+    
+    func timeFormatter(interval: Double) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.unitsStyle = .positional
+
+        let formattedString = formatter.string(from: TimeInterval(interval))!
+        return "\(formattedString)"
     }
     
     func configure() {
         let song = songs[position]
-        
         let urlString = Bundle.main.path(forResource: song.trackName, ofType: "mp3")
-        
         do {
             try AVAudioSession.sharedInstance().setMode(.default)
             try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
@@ -81,6 +118,8 @@ class PlayerViewController: UIViewController {
             guard let player = player else {
                 return
             }
+            
+            totalTime = Double(player.duration)
             player.volume = 0.5
             player.play()
             
@@ -110,7 +149,6 @@ class PlayerViewController: UIViewController {
         songNameLabel.font = .systemFont(ofSize: 24, weight: .heavy)
         albumNameLabel.font = .systemFont(ofSize: 15, weight: .regular)
         
-        
         holder.addSubview(songNameLabel)
         holder.addSubview(albumNameLabel)
         holder.addSubview(artistNameLabel)
@@ -132,9 +170,32 @@ class PlayerViewController: UIViewController {
         nextBtn.setBackgroundImage(UIImage(systemName: "forward.end.alt.fill"), for: .normal)
         backBtn.setBackgroundImage(UIImage(systemName: "backward.end.alt.fill"), for: .normal)
         
-        playPauseBtn.frame = CGRect(x: holder.width/2 - 20, y: albumNameLabel.bottom + 15, width: 40, height: 40)
-        nextBtn.frame = CGRect(x: playPauseBtn.right + 20, y: albumNameLabel.bottom + 15 + 10, width: 40, height: 20)
-        backBtn.frame = CGRect(x: playPauseBtn.left - 20 - 40, y: albumNameLabel.bottom + 15 + 10, width: 40, height: 20)
+        //Progress View
+        progressView = UIProgressView(frame: CGRect(x: 20, y: albumNameLabel.bottom + 20, width: holder.width - 40, height: 30))
+        progressView.progress = 0.0
+        holder.addSubview(progressView)
+        
+        timeCount = UILabel(frame: CGRect(x: 20, y: progressView.top + 10, width: 35, height: 12))
+        timeCount.text = "0:00"
+        timeCount.font = .systemFont(ofSize: 12, weight: .regular)
+        holder.addSubview(timeCount)
+        timeLeft = UILabel(frame: CGRect(x: holder.width - 55, y: progressView.top + 10, width: 35, height: 12))
+        timeLeft.textAlignment = .right
+        if totalTime < 10 {
+            timeLeft.text = "-0:0\(timeFormatter(interval: totalTime))"
+        } else if totalTime < 60 {
+            timeLeft.text = "-0:\(timeFormatter(interval: totalTime))"
+        } else {
+            timeLeft.text = "-\(timeFormatter(interval: totalTime))"
+        }
+        
+        timeLeft.font = .systemFont(ofSize: 12, weight: .regular)
+        holder.addSubview(timeLeft)
+        
+        //Music Control
+        playPauseBtn.frame = CGRect(x: holder.width/2 - 20, y: progressView.bottom + 20, width: 40, height: 40)
+        nextBtn.frame = CGRect(x: playPauseBtn.right + 20, y: progressView.bottom + 20 + 10, width: 40, height: 20)
+        backBtn.frame = CGRect(x: playPauseBtn.left - 20 - 40, y: progressView.bottom + 20 + 10, width: 40, height: 20)
         
         holder.addSubview(playPauseBtn)
         holder.addSubview(nextBtn)
@@ -142,14 +203,14 @@ class PlayerViewController: UIViewController {
         
         //Slider
         
-        let slider = UISlider(frame: CGRect(x: 20, y: playPauseBtn.bottom + 20, width: holder.width - 40, height: 30))
-        slider.value = 0.5
-        slider.addTarget(self, action: #selector(didSlideSlider(_ :)), for: .valueChanged)
-        holder.addSubview(slider)
+        let volumeSlider = UISlider(frame: CGRect(x: 60, y: playPauseBtn.bottom + 15, width: holder.width - 120, height: 20))
+        volumeSlider.value = 0.5
+        volumeSlider.addTarget(self, action: #selector(didSlideSlider(_ :)), for: .valueChanged)
+        holder.addSubview(volumeSlider)
         
-        let volumeUpImage = UIImageView(frame: CGRect(x: slider.left, y: playPauseBtn.bottom, width: 30, height: 20))
+        let volumeUpImage = UIImageView(frame: CGRect(x: volumeSlider.left - 35, y: volumeSlider.bottom - 20, width: 30, height: 20))
         volumeUpImage.image = UIImage(systemName: "speaker.minus.fill")
-        let volumeDownImage = UIImageView(frame: CGRect(x: slider.right - 30, y: playPauseBtn.bottom, width: 30, height: 20))
+        let volumeDownImage = UIImageView(frame: CGRect(x: volumeSlider.right + 5, y: volumeSlider.bottom - 20, width: 30, height: 20))
         volumeDownImage.image = UIImage(systemName: "speaker.plus.fill")
         
         holder.addSubview(volumeUpImage)
@@ -162,6 +223,7 @@ class PlayerViewController: UIViewController {
     
     @objc func didTapBack() {
         if position > 0 {
+            timeElapsed = 0.0
             position = position - 1
             player?.stop()
             for subview in holder.subviews {
@@ -172,6 +234,7 @@ class PlayerViewController: UIViewController {
     }
     @objc func didTapNext() {
         if position < (songs.count - 1) {
+            timeElapsed = 0.0
             position = position + 1
             player?.stop()
             for subview in holder.subviews {
@@ -183,36 +246,30 @@ class PlayerViewController: UIViewController {
     @objc func didTapPause() {
         if player?.isPlaying == true {
             player?.pause()
+            timer.invalidate()
             playPauseBtn.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
-            
             //shrink image
-            
             UIView.animate(withDuration: 0.2) {
                 self.albumImageView.frame = CGRect(x: 50, y: self.dismissBtn.bottom + 40, width: self.holder.width - 100, height: self.holder.width - 100)
             }
-            
         } else {
             player?.play()
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCount), userInfo: nil, repeats: true)
             playPauseBtn.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
-            
             //increase image size
-            
             UIView.animate(withDuration: 0.2) {
                 self.albumImageView.frame = CGRect(x: 30, y: self.dismissBtn.bottom + 20, width: self.holder.width - 60, height: self.holder.width - 60)
             }
-            
         }
     }
     
     @objc func didSlideSlider(_ slider: UISlider) {
         let value = slider.value
-        
         player?.volume = value
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         if let player = player {
             player.stop()
         }
