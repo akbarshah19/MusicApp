@@ -24,10 +24,10 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="f5z-6K-7oO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="2Sc-P4-FBI"/>
-                            <constraint firstAttribute="bottom" secondItem="f5z-6K-7oO" secondAttribute="bottom" id="5zR-bE-jGC"/>
-                            <constraint firstItem="f5z-6K-7oO" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="FbS-fr-mH5"/>
-                            <constraint firstItem="f5z-6K-7oO" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Lha-s5-YZp"/>
+                            <constraint firstAttribute="bottom" secondItem="f5z-6K-7oO" secondAttribute="bottom" id="1tq-TX-cXZ"/>
+                            <constraint firstItem="f5z-6K-7oO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8va-Q9-sx7"/>
+                            <constraint firstItem="f5z-6K-7oO" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="eoe-LF-lXx"/>
+                            <constraint firstItem="f5z-6K-7oO" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="mnn-bY-fqc"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Music" id="LlG-rw-Rpa"/>

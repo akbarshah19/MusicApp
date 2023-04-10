@@ -237,7 +237,6 @@ class PlayerViewController: UIViewController {
     @objc func didTapForward() {
         let shortStartDelay: TimeInterval = 0.05 // seconds
         let now: TimeInterval = player?.deviceCurrentTime ?? 0
-        
         let timeDelayPlay: TimeInterval = now + shortStartDelay
         
         if timeElapsed > totalTime {
@@ -247,7 +246,6 @@ class PlayerViewController: UIViewController {
             progressView.progress = Float(timeElapsed/totalTime)
         }
         
-//            progressView.progress = Float(timeElapsed/totalTime)
         player?.currentTime = timeElapsed // Specific time to start play
         player?.play(atTime: timeDelayPlay)
     }
@@ -255,7 +253,6 @@ class PlayerViewController: UIViewController {
     @objc func didTapBackward() {
         let shortStartDelay: TimeInterval = 0.05 // seconds
         let now: TimeInterval = player?.deviceCurrentTime ?? 0
-
         let timeDelayPlay: TimeInterval = now + shortStartDelay
                 
         if timeElapsed < 15 {
@@ -298,9 +295,24 @@ class PlayerViewController: UIViewController {
     }
     @objc func didTapPausePlay() {
         if player?.isPlaying == true {
-            pausePlayer()
+            player?.pause()
+            timer.invalidate()
+            playPauseBtn.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
+            //shrink image
+            UIView.animate(withDuration: 0.2) { self.albumImageView.frame = CGRect(x: 50,
+                                                                                   y: self.dismissBtn.bottom + 40,
+                                                                                   width: self.holder.width - 100,
+                                                                                   height: self.holder.width - 100)}
         } else {
-            resumePlayer()
+            player?.play()
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCount), userInfo: nil, repeats: true)
+            playPauseBtn.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
+            //increase image
+            UIView.animate(withDuration: 0.2) { self.albumImageView.frame = CGRect(x: 30,
+                                                                                   y: self.dismissBtn.bottom + 20,
+                                                                                   width: self.holder.width - 60,
+                                                                                   height: self.holder.width - 60)}
+            
         }
     }
     
@@ -312,7 +324,7 @@ class PlayerViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if let player = player {
-            player.stop()
+//            player.stop()
         }
     }
     
@@ -329,27 +341,5 @@ class PlayerViewController: UIViewController {
                                                                                y: self.dismissBtn.bottom + 40,
                                                                                width: self.holder.width - 100,
                                                                                height: self.holder.width - 100)}
-    }
-    
-    func pausePlayer() {
-        player?.pause()
-        timer.invalidate()
-        playPauseBtn.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
-        //shrink image
-        UIView.animate(withDuration: 0.2) { self.albumImageView.frame = CGRect(x: 50,
-                                                                               y: self.dismissBtn.bottom + 40,
-                                                                               width: self.holder.width - 100,
-                                                                               height: self.holder.width - 100)}
-    }
-    
-    func resumePlayer() {
-        player?.play()
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCount), userInfo: nil, repeats: true)
-        playPauseBtn.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
-        //increase image
-        UIView.animate(withDuration: 0.2) { self.albumImageView.frame = CGRect(x: 30,
-                                                                               y: self.dismissBtn.bottom + 20,
-                                                                               width: self.holder.width - 60,
-                                                                               height: self.holder.width - 60)}
     }
 }

@@ -24,34 +24,28 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WxU-U1-3Kl">
-                        <rect key="frame" x="81" y="12" width="223" height="28"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="28" id="4Jf-87-X9S"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
+                        <rect key="frame" x="81" y="27" width="223" height="26.333333333333329"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HHj-qN-H4z">
-                        <rect key="frame" x="81" y="48" width="223" height="21"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="21" id="1j4-pI-fwV"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <rect key="frame" x="81" y="55.333333333333343" width="223" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="HHj-qN-H4z" firstAttribute="top" secondItem="WxU-U1-3Kl" secondAttribute="bottom" constant="2" id="2yt-tx-Hpn"/>
                     <constraint firstItem="Fff-7d-N9o" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="7za-XR-Ug4"/>
-                    <constraint firstItem="WxU-U1-3Kl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="12" id="Jf9-a2-dRV"/>
-                    <constraint firstAttribute="bottom" secondItem="HHj-qN-H4z" secondAttribute="bottom" constant="11" id="P5b-fS-6yv"/>
+                    <constraint firstItem="HHj-qN-H4z" firstAttribute="leading" secondItem="Fff-7d-N9o" secondAttribute="trailing" constant="8" symbolic="YES" id="H6v-2V-J8a"/>
                     <constraint firstItem="Fff-7d-N9o" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="12" id="Qco-MQ-scB"/>
-                    <constraint firstAttribute="trailing" secondItem="WxU-U1-3Kl" secondAttribute="trailing" constant="16" id="SGS-Ms-UTl"/>
-                    <constraint firstAttribute="trailing" secondItem="HHj-qN-H4z" secondAttribute="trailing" constant="16" id="UkN-CP-G4X"/>
+                    <constraint firstItem="WxU-U1-3Kl" firstAttribute="leading" secondItem="Fff-7d-N9o" secondAttribute="trailing" constant="8" symbolic="YES" id="d9h-0r-CT4"/>
                     <constraint firstAttribute="bottom" secondItem="Fff-7d-N9o" secondAttribute="bottom" constant="11" id="dpc-eo-eiU"/>
-                    <constraint firstItem="WxU-U1-3Kl" firstAttribute="leading" secondItem="Fff-7d-N9o" secondAttribute="trailing" constant="8" symbolic="YES" id="fIE-ts-muF"/>
-                    <constraint firstItem="HHj-qN-H4z" firstAttribute="leading" secondItem="Fff-7d-N9o" secondAttribute="trailing" constant="8" symbolic="YES" id="men-G0-eD0"/>
+                    <constraint firstItem="WxU-U1-3Kl" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="i3F-D6-P8X"/>
+                    <constraint firstAttribute="trailing" secondItem="WxU-U1-3Kl" secondAttribute="trailing" constant="16" id="pcJ-Pp-dBx"/>
+                    <constraint firstAttribute="trailing" secondItem="HHj-qN-H4z" secondAttribute="trailing" constant="16" id="xiT-4a-BmA"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
