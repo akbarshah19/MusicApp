@@ -16,7 +16,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var timeElapsed: Double = 0
     var position: Int = 0
     var totalTime: Double = 0
-    var volume: Float = 0.5
+    var volume: Float = 0
+    var isPlaying: Bool = false
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -151,7 +152,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func configure() {
-        print("DEBUG: Entered configure()")
         let song = songs[position]
         let urlString = Bundle.main.path(forResource: song.trackName, ofType: "mp3")
         do {
@@ -168,7 +168,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             
             totalTime = Double(round(player.duration))
-            player.volume = 0.5
+            player.volume = volume
             playerLabel.text = song.name
             artistLabel.text = song.artistName
             playerImage.image = UIImage(named: song.imageName)
@@ -178,9 +178,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let timeDelayPlay: TimeInterval = now + shortStartDelay
             
             player.currentTime = timeElapsed + 0.5 // Specific time to start play
-            player.play(atTime: timeDelayPlay)
+            
+            if isPlaying {
+                player.play(atTime: timeDelayPlay)
+            } else {
+                player.pause()
+                playPauseButton.setBackgroundImage(UIImage(systemName: "play.circle.fill"), for: .normal)
+            }
+            
         } catch {
-
             print("Error occured!")
         }
     }
@@ -196,11 +202,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @objc func didTapNext() {
-        
+        if position < (songs.count - 1) {
+            timeElapsed = 0.0
+            position = position + 1
+            player?.stop()
+            configure()
+        }
     }
     
     @objc func didTapBack() {
-        
+        if position > 0 {
+            timeElapsed = 0.0
+            position = position - 1
+            player?.stop()
+            configure()
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -210,9 +226,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
         let song = songs[indexPath.row]
+        
         cell.myImage.image = UIImage(named: song.imageName)
         cell.myLabel.text = song.name
         cell.myAlbum.text = song.artistName
+        
         return cell
     }
     
@@ -224,13 +242,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         player?.stop()
         vc.songs = songs
-        vc.position = indexPath.row
-//        vc.modalPresentationStyle = .fullScreen
-        
-        vc.completionHandler = { position, timeElapsed, volume in
+        vc.position = indexPath.row        
+        vc.completionHandler = { position, timeElapsed, volume, isPlaying in
             self.position = position
             self.timeElapsed = timeElapsed
             self.volume = volume
+            self.isPlaying = isPlaying
+            self.tableView.reloadData()
             self.configure()
         }
         

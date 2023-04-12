@@ -19,9 +19,10 @@ class PlayerViewController: UIViewController {
     
     var totalTime: Double = 0.0
     var timeElapsed: Double = 0.0
-    var volume: Float = 0.0
+    var volume: Float = 0.5
+    var isPlaying: Bool = false
     
-    var completionHandler: ((Int, Double, Float) -> Void)?
+    var completionHandler: ((Int, Double, Float, Bool) -> Void)?
     
     @IBOutlet weak var holder: UIView!
     
@@ -146,7 +147,7 @@ class PlayerViewController: UIViewController {
             }
             
             totalTime = Double(round(player.duration))
-            player.volume = 0.5
+            player.volume = volume
             player.play()
             
         } catch {
@@ -298,14 +299,17 @@ class PlayerViewController: UIViewController {
     }
     
     @objc func didTapDismiss() {
-        completionHandler?(position, timeElapsed, volume)
         self.dismiss(animated: true)
-        player?.stop()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        completionHandler?(position, timeElapsed, volume)
+        if player?.isPlaying == true {
+            isPlaying = true
+        } else {
+            isPlaying = false
+        }
+        completionHandler?(position, timeElapsed, volume, isPlaying)
         player?.stop()
     }
     
