@@ -32,3 +32,8 @@ extension UIView {
         return self.frame.size.width + self.frame.origin.x
     }
 }
+
+extension UIColor {
+    static var mainBgColor = UIColor(red: 82/255, green: 171/255, blue: 90/255, alpha: 1)
+}
+

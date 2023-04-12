@@ -13,6 +13,16 @@ class PlayerViewController: UIViewController {
     public var position: Int = 0
     public var songs: [Song] = []
     
+    var player: AVAudioPlayer?
+    let playPauseBtn = UIButton()
+    var timer = Timer()
+    
+    var totalTime: Double = 0.0
+    var timeElapsed: Double = 0.0
+    var volume: Float = 0.0
+    
+    var completionHandler: ((Int, Double, Float) -> Void)?
+    
     @IBOutlet weak var holder: UIView!
     
     private let dismissBtn: UIButton = {
@@ -57,15 +67,26 @@ class PlayerViewController: UIViewController {
     private var timeCount = UILabel()
     private var timeLeft = UILabel()
     
-    var player: AVAudioPlayer?
-    let playPauseBtn = UIButton()
-    var timer = Timer()
-    
-    var totalTime: Double = 0.0
-    var timeElapsed: Double = 0.0
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .clear
+        holder.backgroundColor = .clear
+
+        let blurEffect = UIBlurEffect(style: .prominent)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(blurView, at: 0)
+        NSLayoutConstraint.activate([
+          blurView.topAnchor.constraint(equalTo: view.topAnchor),
+          blurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+          blurView.heightAnchor.constraint(equalTo: view.heightAnchor),
+          blurView.widthAnchor.constraint(equalTo: view.widthAnchor)
+        ])
+        
+  
+        
         if holder.subviews.count == 0 {
             configure()
         }
@@ -167,9 +188,9 @@ class PlayerViewController: UIViewController {
         nextBtn.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
         backBtn.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
                 
-        playPauseBtn.tintColor = .black
-        nextBtn.tintColor = .black
-        backBtn.tintColor = .black
+        playPauseBtn.tintColor = .label
+        nextBtn.tintColor = .label
+        backBtn.tintColor = .label
         
         playPauseBtn.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
         nextBtn.setBackgroundImage(UIImage(systemName: "forward.end.alt.fill"), for: .normal)
@@ -177,6 +198,7 @@ class PlayerViewController: UIViewController {
         
         //Progress View
         progressView = UIProgressView(frame: CGRect(x: 20, y: albumNameLabel.bottom + 20, width: holder.width - 40, height: 30))
+        progressView.tintColor = UIColor(named: "greenTint")
         progressView.progress = 0.0
         holder.addSubview(progressView)
         
@@ -211,6 +233,9 @@ class PlayerViewController: UIViewController {
         backward.setBackgroundImage(UIImage(systemName: "gobackward.15"), for: .normal)
         backward.addTarget(self, action: #selector(didTapBackward), for: .touchUpInside)
         
+        forward.tintColor = .label
+        backward.tintColor = .label
+        
         holder.addSubview(playPauseBtn)
         holder.addSubview(nextBtn)
         holder.addSubview(backBtn)
@@ -221,6 +246,8 @@ class PlayerViewController: UIViewController {
         //Slider
         
         let volumeSlider = UISlider(frame: CGRect(x: 60, y: playPauseBtn.bottom + 15, width: holder.width - 120, height: 20))
+        volumeSlider.tintColor = UIColor(named: "greenTint")
+        volumeSlider.setThumbImage(UIImage(systemName: "circle.fill"), for: .normal)
         volumeSlider.value = 0.5
         volumeSlider.addTarget(self, action: #selector(didSlideSlider(_ :)), for: .valueChanged)
         holder.addSubview(volumeSlider)
@@ -229,6 +256,9 @@ class PlayerViewController: UIViewController {
         volumeUpImage.image = UIImage(systemName: "speaker.minus.fill")
         let volumeDownImage = UIImageView(frame: CGRect(x: volumeSlider.right + 5, y: volumeSlider.bottom - 20, width: 30, height: 20))
         volumeDownImage.image = UIImage(systemName: "speaker.plus.fill")
+        
+        volumeUpImage.tintColor = .label
+        volumeDownImage.tintColor = .label
         
         holder.addSubview(volumeUpImage)
         holder.addSubview(volumeDownImage)
@@ -268,7 +298,15 @@ class PlayerViewController: UIViewController {
     }
     
     @objc func didTapDismiss() {
+        completionHandler?(position, timeElapsed, volume)
         self.dismiss(animated: true)
+        player?.stop()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        completionHandler?(position, timeElapsed, volume)
+        player?.stop()
     }
     
     @objc func didTapBack() {
@@ -317,15 +355,8 @@ class PlayerViewController: UIViewController {
     }
     
     @objc func didSlideSlider(_ slider: UISlider) {
-        let value = slider.value
-        player?.volume = value
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if let player = player {
-//            player.stop()
-        }
+        volume = slider.value
+        player?.volume = volume
     }
     
     func resetPlayer() {

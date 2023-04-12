@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Music-->
+        <!--MusicApp-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MusicApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -16,23 +16,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="f5z-6K-7oO">
-                                <rect key="frame" x="0.0" y="155" width="393" height="697"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="OuI-CP-QcJ">
+                                <rect key="frame" x="10" y="155" width="373" height="697"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="f5z-6K-7oO" secondAttribute="bottom" id="1tq-TX-cXZ"/>
-                            <constraint firstItem="f5z-6K-7oO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="8va-Q9-sx7"/>
-                            <constraint firstItem="f5z-6K-7oO" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="eoe-LF-lXx"/>
-                            <constraint firstItem="f5z-6K-7oO" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="mnn-bY-fqc"/>
+                            <constraint firstItem="OuI-CP-QcJ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="02r-2P-76S"/>
+                            <constraint firstAttribute="bottom" secondItem="OuI-CP-QcJ" secondAttribute="bottom" id="C9d-Vm-RCH"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="OuI-CP-QcJ" secondAttribute="trailing" constant="10" id="ih8-U3-aIP"/>
+                            <constraint firstItem="OuI-CP-QcJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="pBX-Rg-XLS"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Music" id="LlG-rw-Rpa"/>
+                    <navigationItem key="navigationItem" title="MusicApp" id="LlG-rw-Rpa"/>
                     <connections>
-                        <outlet property="tableView" destination="f5z-6K-7oO" id="Mk3-lO-J6j"/>
+                        <outlet property="tableView" destination="OuI-CP-QcJ" id="6t2-B0-Sz4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -6,20 +6,26 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var player: AVAudioPlayer?
     var songs = [Song]()
+    
+    var timeElapsed: Double = 0
+    var position: Int = 0
+    var totalTime: Double = 0
+    var volume: Float = 0.5
 
     @IBOutlet weak var tableView: UITableView!
     
     private let playerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .secondarySystemBackground
+        view.isHidden = true
+        view.backgroundColor = .clear
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 10
-        view.layer.borderColor = UIColor.darkGray.cgColor
-        view.layer.borderWidth = 1
         return view
     }()
     
@@ -27,8 +33,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let image = UIImageView()
         image.layer.masksToBounds = true
         image.layer.cornerRadius = 8
-        image.layer.borderWidth = 1
-        image.layer.borderColor = UIColor.darkGray.cgColor
         return image
     }()
     
@@ -42,38 +46,59 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private let artistLabel: UILabel = {
         let label = UILabel()
         label.text = "Drake"
-        label.font = .systemFont(ofSize: 18, weight: .thin)
+        label.font = .systemFont(ofSize: 18, weight: .regular)
         return label
     }()
     
     private let nextButton: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "forward.end.fill"), for: .normal)
+        button.tintColor = UIColor(named: "greenTint")
         return button
     }()
     
     private let playPauseButton: UIButton = {
         let button = UIButton()
-        button.setBackgroundImage(UIImage(systemName: "play.circle.fill"), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+        button.tintColor = UIColor(named: "greenTint")
         return button
     }()
     
     private let backButton: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "backward.end.fill"), for: .normal)
+        button.tintColor = UIColor(named: "greenTint")
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .mainBgColor
         view.addSubview(tableView)
-        tableView.frame = view.bounds
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.backgroundColor = .mainBgColor
+        tableView.layer.cornerRadius = 10
         tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
         configureSongs()
         
         view.addSubview(playerView)
+        //Blur effect
+        let blurEffect = UIBlurEffect(style: .prominent)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        playerView.insertSubview(blurView, at: 0)
+        NSLayoutConstraint.activate([
+          blurView.topAnchor.constraint(equalTo: view.topAnchor),
+          blurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+          blurView.heightAnchor.constraint(equalTo: view.heightAnchor),
+          blurView.widthAnchor.constraint(equalTo: view.widthAnchor)
+        ])
+        
+        playPauseButton.addTarget(self, action: #selector(didTapPlayPause), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
+        backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
+
         playerView.addSubview(playerImage)
         playerView.addSubview(playerLabel)
         playerView.addSubview(artistLabel)
@@ -108,7 +133,74 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                           artistName: "The Weeknd",
                           imageName: "cover3",
                           trackName: "music3"))
+        songs.append(Song(name: "Call out my name",
+                          albumName: "My Dear Melancholy",
+                          artistName: "The Weeknd",
+                          imageName: "cover1",
+                          trackName: "music1"))
+        songs.append(Song(name: "The Hills",
+                          albumName: "Madness",
+                          artistName: "The Weeknd",
+                          imageName: "cover2",
+                          trackName: "music2"))
+        songs.append(Song(name: "Creepin",
+                          albumName: "Featured Song",
+                          artistName: "The Weeknd",
+                          imageName: "cover3",
+                          trackName: "music3"))
+    }
+    
+    func configure() {
+        print("DEBUG: Entered configure()")
+        let song = songs[position]
+        let urlString = Bundle.main.path(forResource: song.trackName, ofType: "mp3")
+        do {
+            try AVAudioSession.sharedInstance().setMode(.default)
+            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+            
+            guard let urlString = urlString else {
+                return print("URL error")
+            }
+            
+            player = try AVAudioPlayer(contentsOf: URL(string: urlString)!)
+            guard let player = player else {
+                return print("Player error")
+            }
+            
+            totalTime = Double(round(player.duration))
+            player.volume = 0.5
+            playerLabel.text = song.name
+            artistLabel.text = song.artistName
+            playerImage.image = UIImage(named: song.imageName)
+            
+            let shortStartDelay: TimeInterval = 0.05 // seconds
+            let now: TimeInterval = player.deviceCurrentTime
+            let timeDelayPlay: TimeInterval = now + shortStartDelay
+            
+            player.currentTime = timeElapsed + 0.5 // Specific time to start play
+            player.play(atTime: timeDelayPlay)
+        } catch {
 
+            print("Error occured!")
+        }
+    }
+    
+    @objc func didTapPlayPause() {
+        if player?.isPlaying == true {
+            playPauseButton.setBackgroundImage(UIImage(systemName: "play.circle.fill"), for: .normal)
+            player?.pause()
+        } else {
+            playPauseButton.setBackgroundImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+            player?.play()
+        }
+    }
+    
+    @objc func didTapNext() {
+        
+    }
+    
+    @objc func didTapBack() {
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -126,17 +218,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let position = indexPath.row
-        
+                
         guard let vc = storyboard?.instantiateViewController(withIdentifier: "player") as? PlayerViewController else {
             return
         }
-        
+        player?.stop()
         vc.songs = songs
-        vc.position = position
+        vc.position = indexPath.row
+//        vc.modalPresentationStyle = .fullScreen
+        
+        vc.completionHandler = { position, timeElapsed, volume in
+            self.position = position
+            self.timeElapsed = timeElapsed
+            self.volume = volume
+            self.configure()
+        }
         
         present(vc, animated: true)
+        playerView.isHidden = false
     }
 }
 
