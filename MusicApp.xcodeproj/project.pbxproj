@@ -61,6 +61,45 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
+		AD6E1E9C29E8809F00254C10 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AD81782A29CAD29B0057FCCB /* AppDelegate.swift */,
+				AD81782C29CAD29B0057FCCB /* SceneDelegate.swift */,
+				ADEFC7F929CC390100C25088 /* Extensions.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		AD6E1E9D29E880AB00254C10 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				AD81782E29CAD29B0057FCCB /* ViewController.swift */,
+				ADEFC7F729CC25C100C25088 /* PlayerViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		AD6E1E9E29E880C200254C10 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AD81783029CAD29B0057FCCB /* Main.storyboard */,
+				AD81783529CAD29C0057FCCB /* LaunchScreen.storyboard */,
+				AD81783329CAD29C0057FCCB /* Assets.xcassets */,
+				AD6E1E9F29E880DA00254C10 /* Cell */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AD6E1E9F29E880DA00254C10 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				AD67C87B29CB386D003E948E /* TableViewCell.swift */,
+				AD67C87C29CB386D003E948E /* TableViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		AD81781E29CAD29B0057FCCB = {
 			isa = PBXGroup;
 			children = (
@@ -81,17 +120,10 @@
 			isa = PBXGroup;
 			children = (
 				AD67C87429CB3285003E948E /* Audio */,
-				AD81782A29CAD29B0057FCCB /* AppDelegate.swift */,
-				AD81782C29CAD29B0057FCCB /* SceneDelegate.swift */,
-				AD81782E29CAD29B0057FCCB /* ViewController.swift */,
-				ADEFC7F729CC25C100C25088 /* PlayerViewController.swift */,
-				AD81783029CAD29B0057FCCB /* Main.storyboard */,
-				AD67C87B29CB386D003E948E /* TableViewCell.swift */,
-				AD67C87C29CB386D003E948E /* TableViewCell.xib */,
-				AD81783329CAD29C0057FCCB /* Assets.xcassets */,
-				AD81783529CAD29C0057FCCB /* LaunchScreen.storyboard */,
+				AD6E1E9C29E8809F00254C10 /* Resources */,
+				AD6E1E9E29E880C200254C10 /* Views */,
+				AD6E1E9D29E880AB00254C10 /* Controllers */,
 				AD81783829CAD29C0057FCCB /* Info.plist */,
-				ADEFC7F929CC390100C25088 /* Extensions.swift */,
 			);
 			path = MusicApp;
 			sourceTree = "<group>";

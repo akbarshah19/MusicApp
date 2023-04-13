@@ -27,6 +27,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         view.backgroundColor = .clear
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 10
+        view.layer.borderColor = UIColor.label.cgColor
+        view.layer.borderWidth = 1
         return view
     }()
     
@@ -99,6 +101,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         playPauseButton.addTarget(self, action: #selector(didTapPlayPause), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
         backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
+        
+        let gesRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+        playerView.addGestureRecognizer(gesRecognizer)
 
         playerView.addSubview(playerImage)
         playerView.addSubview(playerLabel)
@@ -109,7 +114,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     override func viewDidLayoutSubviews() {
-        playerView.frame = CGRect(x: 10, y: view.height - 110, width: view.width - 20, height: 80)
+        playerView.frame = CGRect(x: 5, y: view.height - 140, width: view.width - 10, height: 80)
         playerImage.frame = CGRect(x: playerView.left + 0, y: playerView.height/2 - 30, width: 60, height: 60)
         playerLabel.frame = CGRect(x: playerImage.right + 10, y: playerImage.top + 20, width: 180, height: 20)
         artistLabel.frame = CGRect(x: playerImage.right + 10, y: playerLabel.bottom, width: 180, height: 20)
@@ -149,6 +154,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                           artistName: "The Weeknd",
                           imageName: "cover3",
                           trackName: "music3"))
+        songs.append(Song(name: "The Hills",
+                          albumName: "Madness",
+                          artistName: "The Weeknd",
+                          imageName: "cover2",
+                          trackName: "music2"))
+        songs.append(Song(name: "Creepin",
+                          albumName: "Featured Song",
+                          artistName: "The Weeknd",
+                          imageName: "cover3",
+                          trackName: "music3"))
+        songs.append(Song(name: "The Hills",
+                          albumName: "Madness",
+                          artistName: "The Weeknd",
+                          imageName: "cover2",
+                          trackName: "music2"))
+        songs.append(Song(name: "Creepin",
+                          albumName: "Featured Song",
+                          artistName: "The Weeknd",
+                          imageName: "cover3",
+                          trackName: "music3"))
     }
     
     func configure() {
@@ -177,7 +202,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let now: TimeInterval = player.deviceCurrentTime
             let timeDelayPlay: TimeInterval = now + shortStartDelay
             
-            player.currentTime = timeElapsed + 0.5 // Specific time to start play
+            player.currentTime = timeElapsed // Specific time to start play
             
             if isPlaying {
                 player.play(atTime: timeDelayPlay)
@@ -189,6 +214,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         } catch {
             print("Error occured!")
         }
+    }
+    
+    @objc func didTapView() {
+        guard let vc = storyboard?.instantiateViewController(withIdentifier: "player") as? PlayerViewController else {
+            return
+        }
+        vc.songs = songs
+        vc.position = position
+        player?.pause()
+        present(vc, animated: true)
     }
     
     @objc func didTapPlayPause() {
