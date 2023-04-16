@@ -7,11 +7,13 @@
 
 import UIKit
 import AVFoundation
+import Hero
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var player: AVAudioPlayer?
     var songs = [Song]()
+    var timer = Timer()
     
     var timeElapsed: Double = 0
     var position: Int = 0
@@ -42,14 +44,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     private let playerLabel: UILabel = {
         let label = UILabel()
         label.text = "Hello"
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
     }()
     
     private let artistLabel: UILabel = {
         let label = UILabel()
         label.text = "Drake"
-        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.font = .systemFont(ofSize: 13, weight: .regular)
         return label
     }()
     
@@ -77,26 +79,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .mainBgColor
-        view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .mainBgColor
         tableView.layer.cornerRadius = 10
         tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
         configureSongs()
+        addSubviews()
         
-        view.addSubview(playerView)
         //Blur effect
-        let blurEffect = UIBlurEffect(style: .prominent)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        playerView.insertSubview(blurView, at: 0)
-        NSLayoutConstraint.activate([
-          blurView.topAnchor.constraint(equalTo: view.topAnchor),
-          blurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-          blurView.heightAnchor.constraint(equalTo: view.heightAnchor),
-          blurView.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ])
+        blur(playerView, style: .prominent)
         
         playPauseButton.addTarget(self, action: #selector(didTapPlayPause), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
@@ -104,7 +96,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let gesRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         playerView.addGestureRecognizer(gesRecognizer)
-
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view?.hero.isEnabled = true
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        view?.hero.isEnabled = false
+    }
+    
+    func addSubviews() {
+        view.addSubview(tableView)
+        view.addSubview(playerView)
         playerView.addSubview(playerImage)
         playerView.addSubview(playerLabel)
         playerView.addSubview(artistLabel)
@@ -115,7 +121,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLayoutSubviews() {
         playerView.frame = CGRect(x: 5, y: view.height - 140, width: view.width - 10, height: 80)
-        playerImage.frame = CGRect(x: playerView.left + 0, y: playerView.height/2 - 30, width: 60, height: 60)
+        playerImage.frame = CGRect(x: playerView.left + 5, y: playerView.height/2 - 30, width: 60, height: 60)
         playerLabel.frame = CGRect(x: playerImage.right + 10, y: playerImage.top + 20, width: 180, height: 20)
         artistLabel.frame = CGRect(x: playerImage.right + 10, y: playerLabel.bottom, width: 180, height: 20)
         nextButton.frame = CGRect(x: playerView.width - 25, y: playerView.height/2 - 10, width: 20, height: 20)
@@ -129,41 +135,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                           artistName: "The Weeknd",
                           imageName: "cover1",
                           trackName: "music1"))
-        songs.append(Song(name: "The Hills",
-                          albumName: "Madness",
-                          artistName: "The Weeknd",
-                          imageName: "cover2",
-                          trackName: "music2"))
-        songs.append(Song(name: "Creepin",
-                          albumName: "Featured Song",
-                          artistName: "The Weeknd",
-                          imageName: "cover3",
-                          trackName: "music3"))
-        songs.append(Song(name: "Call out my name",
-                          albumName: "My Dear Melancholy",
-                          artistName: "The Weeknd",
-                          imageName: "cover1",
-                          trackName: "music1"))
-        songs.append(Song(name: "The Hills",
-                          albumName: "Madness",
-                          artistName: "The Weeknd",
-                          imageName: "cover2",
-                          trackName: "music2"))
-        songs.append(Song(name: "Creepin",
-                          albumName: "Featured Song",
-                          artistName: "The Weeknd",
-                          imageName: "cover3",
-                          trackName: "music3"))
-        songs.append(Song(name: "The Hills",
-                          albumName: "Madness",
-                          artistName: "The Weeknd",
-                          imageName: "cover2",
-                          trackName: "music2"))
-        songs.append(Song(name: "Creepin",
-                          albumName: "Featured Song",
-                          artistName: "The Weeknd",
-                          imageName: "cover3",
-                          trackName: "music3"))
         songs.append(Song(name: "The Hills",
                           albumName: "Madness",
                           artistName: "The Weeknd",
@@ -201,19 +172,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let shortStartDelay: TimeInterval = 0.05 // seconds
             let now: TimeInterval = player.deviceCurrentTime
             let timeDelayPlay: TimeInterval = now + shortStartDelay
-            
-            player.currentTime = timeElapsed // Specific time to start play
-            
+                        
             if isPlaying {
+                player.currentTime = timeElapsed // Specific time to start play
                 player.play(atTime: timeDelayPlay)
             } else {
                 player.pause()
                 playPauseButton.setBackgroundImage(UIImage(systemName: "play.circle.fill"), for: .normal)
             }
-            
         } catch {
             print("Error occured!")
         }
+    }
+    
+    @objc func timerCount() {
+        timeElapsed += 1
     }
     
     @objc func didTapView() {
@@ -222,17 +195,39 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         vc.songs = songs
         vc.position = position
+        vc.timeElapsed = timeElapsed
+        vc.isPlaying = true
         player?.pause()
-        present(vc, animated: true)
+        timer.invalidate()
+        
+        playerView.heroID = "view"
+        vc.view.heroID = "view"
+        playerImage.heroID = "image"
+        vc.albumImageView.heroID = "image"
+        playerLabel.heroID = "songName"
+        vc.songNameLabel.heroID = "songName"
+        artistLabel.heroID = "Artist"
+        vc.artistNameLabel.heroID = "Artist"
+        playPauseButton.heroID = "PlayPause"
+        vc.playPauseBtn.heroID = "PlayPause"
+        nextButton.heroID = "Next"
+        vc.nextBtn.heroID = "Next"
+        backButton.heroID = "Back"
+        vc.backBtn.heroID = "Back"
+        
+        vc.hero.isEnabled = true
+        showHero(vc)
     }
     
     @objc func didTapPlayPause() {
         if player?.isPlaying == true {
             playPauseButton.setBackgroundImage(UIImage(systemName: "play.circle.fill"), for: .normal)
             player?.pause()
+            timer.invalidate()
         } else {
             playPauseButton.setBackgroundImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
             player?.play()
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCount), userInfo: nil, repeats: true)
         }
     }
     
@@ -261,23 +256,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
         let song = songs[indexPath.row]
-        
         cell.myImage.image = UIImage(named: song.imageName)
         cell.myLabel.text = song.name
         cell.myAlbum.text = song.artistName
-        
+        cell.playbackTIme.text = timeFormatter(interval: totalTime)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-                
         guard let vc = storyboard?.instantiateViewController(withIdentifier: "player") as? PlayerViewController else {
             return
         }
         player?.stop()
+        timer.invalidate()
+        
         vc.songs = songs
-        vc.position = indexPath.row        
+        vc.position = indexPath.row
         vc.completionHandler = { position, timeElapsed, volume, isPlaying in
             self.position = position
             self.timeElapsed = timeElapsed
@@ -285,18 +280,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.isPlaying = isPlaying
             self.tableView.reloadData()
             self.configure()
+            
+            if isPlaying {
+                self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerCount), userInfo: nil, repeats: true)
+            }
         }
+        tableView.heroID = "table"
+        vc.view.heroID = "table"
+        vc.isHeroEnabled = true
+        showHero(vc)
         
-        present(vc, animated: true)
         playerView.isHidden = false
     }
 }
-
-struct Song {
-    let name: String
-    let albumName: String
-    let artistName: String
-    let imageName: String
-    let trackName: String
-}
-

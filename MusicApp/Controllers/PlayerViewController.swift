@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import Hero
 
 class PlayerViewController: UIViewController {
     
@@ -14,18 +15,20 @@ class PlayerViewController: UIViewController {
     public var songs: [Song] = []
     
     var player: AVAudioPlayer?
-    let playPauseBtn = UIButton()
     var timer = Timer()
     
     var totalTime: Double = 0.0
     var timeElapsed: Double = 0.0
     var volume: Float = 0.5
     var isPlaying: Bool = false
-    
     var completionHandler: ((Int, Double, Float, Bool) -> Void)?
     
     @IBOutlet weak var holder: UIView!
     
+    let playPauseBtn = UIButton()
+    let nextBtn = UIButton()
+    let backBtn = UIButton()
+
     private let dismissBtn: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "chevron.compact.down"), for: .normal)
@@ -35,7 +38,7 @@ class PlayerViewController: UIViewController {
         return button
     }()
     
-    private let albumImageView: UIImageView = {
+    let albumImageView: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFill
         image.layer.masksToBounds = true
@@ -43,21 +46,21 @@ class PlayerViewController: UIViewController {
         return image
     }()
     
-    private let songNameLabel: UILabel = {
+    let songNameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
     }()
     
-    private let artistNameLabel: UILabel = {
+    let artistNameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
     }()
     
-    private let albumNameLabel: UILabel = {
+    let albumNameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -68,30 +71,36 @@ class PlayerViewController: UIViewController {
     private var timeCount = UILabel()
     private var timeLeft = UILabel()
     
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
         holder.backgroundColor = .clear
 
-        let blurEffect = UIBlurEffect(style: .prominent)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(blurView, at: 0)
-        NSLayoutConstraint.activate([
-          blurView.topAnchor.constraint(equalTo: view.topAnchor),
-          blurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-          blurView.heightAnchor.constraint(equalTo: view.heightAnchor),
-          blurView.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ])
-        
-  
+        //blur
+        blur(view, style: .prominent)
         
         if holder.subviews.count == 0 {
             configure()
         }
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCount), userInfo: nil, repeats: true)
+        progressView.progress = Float(timeElapsed/totalTime)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view?.hero.isEnabled = true
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if player?.isPlaying == true {
+            isPlaying = true
+        } else {
+            isPlaying = false
+        }
+        completionHandler?(position, timeElapsed, volume, isPlaying)
+        player?.stop()
+        view?.hero.isEnabled = false
     }
     
     @objc func timerCount() {
@@ -114,19 +123,9 @@ class PlayerViewController: UIViewController {
             } else {
                 timeLeft.text = "-\(timeFormatter(interval: totalTime - timeElapsed))"
             }
-            
         } else {
             resetPlayer()
         }
-    }
-    
-    func timeFormatter(interval: Double) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.minute, .second]
-        formatter.unitsStyle = .positional
-
-        let formattedString = formatter.string(from: TimeInterval(interval))!
-        return "\(formattedString)"
     }
     
     func configure() {
@@ -135,20 +134,22 @@ class PlayerViewController: UIViewController {
         do {
             try AVAudioSession.sharedInstance().setMode(.default)
             try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-            
             guard let urlString = urlString else {
                 return
             }
-            
             player = try AVAudioPlayer(contentsOf: URL(string: urlString)!)
-            
             guard let player = player else {
                 return
             }
-            
             totalTime = Double(round(player.duration))
             player.volume = volume
-            player.play()
+            
+            let shortStartDelay: TimeInterval = 0.05 // seconds
+            let now: TimeInterval = player.deviceCurrentTime
+            let timeDelayPlay: TimeInterval = now + shortStartDelay
+            
+            player.currentTime = timeElapsed // Specific time to start play
+            player.play(atTime: timeDelayPlay)
             
         } catch {
             print("Error occured!")
@@ -163,7 +164,6 @@ class PlayerViewController: UIViewController {
         holder.addSubview(albumImageView)
         
         //Labels
-        
         artistNameLabel.frame = CGRect(x: 10, y: albumImageView.bottom + 5, width: holder.width - 20, height: 17)
         songNameLabel.frame = CGRect(x: 10, y: artistNameLabel.bottom + 10, width: holder.width - 20, height: 26)
         albumNameLabel.frame = CGRect(x: 10, y: songNameLabel.bottom + 10, width: holder.width - 20, height: 17)
@@ -181,10 +181,6 @@ class PlayerViewController: UIViewController {
         holder.addSubview(artistNameLabel)
         
         //Buttons
-        
-        let nextBtn = UIButton()
-        let backBtn = UIButton()
-        
         playPauseBtn.addTarget(self, action: #selector(didTapPausePlay), for: .touchUpInside)
         nextBtn.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
         backBtn.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
@@ -217,7 +213,6 @@ class PlayerViewController: UIViewController {
         } else {
             timeLeft.text = "-\(timeFormatter(interval: totalTime))"
         }
-        
         timeLeft.font = .systemFont(ofSize: 12, weight: .regular)
         holder.addSubview(timeLeft)
         
@@ -240,12 +235,10 @@ class PlayerViewController: UIViewController {
         holder.addSubview(playPauseBtn)
         holder.addSubview(nextBtn)
         holder.addSubview(backBtn)
-        
         holder.addSubview(forward)
         holder.addSubview(backward)
         
         //Slider
-        
         let volumeSlider = UISlider(frame: CGRect(x: 60, y: playPauseBtn.bottom + 15, width: holder.width - 120, height: 20))
         volumeSlider.tintColor = UIColor(named: "greenTint")
         volumeSlider.setThumbImage(UIImage(systemName: "circle.fill"), for: .normal)
@@ -302,17 +295,6 @@ class PlayerViewController: UIViewController {
         self.dismiss(animated: true)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        if player?.isPlaying == true {
-            isPlaying = true
-        } else {
-            isPlaying = false
-        }
-        completionHandler?(position, timeElapsed, volume, isPlaying)
-        player?.stop()
-    }
-    
     @objc func didTapBack() {
         if position > 0 {
             timeElapsed = 0.0
@@ -354,7 +336,6 @@ class PlayerViewController: UIViewController {
                                                                                    y: self.dismissBtn.bottom + 20,
                                                                                    width: self.holder.width - 60,
                                                                                    height: self.holder.width - 60)}
-            
         }
     }
     

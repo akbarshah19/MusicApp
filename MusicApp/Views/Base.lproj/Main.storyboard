@@ -11,7 +11,7 @@
         <!--MusicApp-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MusicApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="MusicApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -55,10 +55,10 @@
                         <viewLayoutGuide key="safeArea" id="Hlt-ke-SV5"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="hWo-k6-iJj" firstAttribute="top" secondItem="Hlt-ke-SV5" secondAttribute="top" id="9gm-us-2LN"/>
-                            <constraint firstItem="hWo-k6-iJj" firstAttribute="bottom" secondItem="Hlt-ke-SV5" secondAttribute="bottom" id="JWC-57-uK9"/>
-                            <constraint firstItem="hWo-k6-iJj" firstAttribute="trailing" secondItem="Hlt-ke-SV5" secondAttribute="trailing" id="hu1-F6-DLm"/>
-                            <constraint firstItem="hWo-k6-iJj" firstAttribute="leading" secondItem="Hlt-ke-SV5" secondAttribute="leading" id="qlN-qE-aq2"/>
+                            <constraint firstItem="hWo-k6-iJj" firstAttribute="top" secondItem="Hlt-ke-SV5" secondAttribute="top" id="3Fm-GU-7Jd"/>
+                            <constraint firstItem="hWo-k6-iJj" firstAttribute="bottom" secondItem="Hlt-ke-SV5" secondAttribute="bottom" id="OhK-xd-gNp"/>
+                            <constraint firstItem="hWo-k6-iJj" firstAttribute="trailing" secondItem="Hlt-ke-SV5" secondAttribute="trailing" id="Wg7-nR-fca"/>
+                            <constraint firstItem="hWo-k6-iJj" firstAttribute="leading" secondItem="Hlt-ke-SV5" secondAttribute="leading" id="fdV-df-CPy"/>
                         </constraints>
                     </view>
                     <connections>
