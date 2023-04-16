@@ -41,16 +41,14 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return image
     }()
     
-    private let playerLabel: UILabel = {
+    private let playerName: UILabel = {
         let label = UILabel()
-        label.text = "Hello"
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
     }()
     
-    private let artistLabel: UILabel = {
+    private let playerArtist: UILabel = {
         let label = UILabel()
-        label.text = "Drake"
         label.font = .systemFont(ofSize: 13, weight: .regular)
         return label
     }()
@@ -112,8 +110,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.addSubview(tableView)
         view.addSubview(playerView)
         playerView.addSubview(playerImage)
-        playerView.addSubview(playerLabel)
-        playerView.addSubview(artistLabel)
+        playerView.addSubview(playerName)
+        playerView.addSubview(playerArtist)
         playerView.addSubview(nextButton)
         playerView.addSubview(playPauseButton)
         playerView.addSubview(backButton)
@@ -122,8 +120,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLayoutSubviews() {
         playerView.frame = CGRect(x: 5, y: view.height - 140, width: view.width - 10, height: 80)
         playerImage.frame = CGRect(x: playerView.left + 5, y: playerView.height/2 - 30, width: 60, height: 60)
-        playerLabel.frame = CGRect(x: playerImage.right + 10, y: playerImage.top + 20, width: 180, height: 20)
-        artistLabel.frame = CGRect(x: playerImage.right + 10, y: playerLabel.bottom, width: 180, height: 20)
+        playerName.frame = CGRect(x: playerImage.right + 10, y: playerImage.top + 20, width: 180, height: 20)
+        playerArtist.frame = CGRect(x: playerImage.right + 10, y: playerName.bottom, width: 180, height: 20)
         nextButton.frame = CGRect(x: playerView.width - 25, y: playerView.height/2 - 10, width: 20, height: 20)
         playPauseButton.frame = CGRect(x: nextButton.left - 45, y: playerView.height/2 - 20, width: 40, height: 40)
         backButton.frame = CGRect(x: playPauseButton.left - 25, y: playerView.height/2 - 10, width: 20, height: 20)
@@ -165,8 +163,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             totalTime = Double(round(player.duration))
             player.volume = volume
-            playerLabel.text = song.name
-            artistLabel.text = song.artistName
+            playerName.text = song.name
+            playerArtist.text = song.artistName
             playerImage.image = UIImage(named: song.imageName)
             
             let shortStartDelay: TimeInterval = 0.05 // seconds
@@ -203,11 +201,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         playerView.heroID = "view"
         vc.view.heroID = "view"
         playerImage.heroID = "image"
-        vc.albumImageView.heroID = "image"
-        playerLabel.heroID = "songName"
-        vc.songNameLabel.heroID = "songName"
-        artistLabel.heroID = "Artist"
-        vc.artistNameLabel.heroID = "Artist"
+        vc.albumImage.heroID = "image"
+        playerName.heroID = "songName"
+        vc.songLabel.heroID = "songName"
+        playerArtist.heroID = "Artist"
+        vc.artistLabel.heroID = "Artist"
         playPauseButton.heroID = "PlayPause"
         vc.playPauseBtn.heroID = "PlayPause"
         nextButton.heroID = "Next"
@@ -273,7 +271,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         vc.songs = songs
         vc.position = indexPath.row
-        vc.completionHandler = { position, timeElapsed, volume, isPlaying in
+        vc.completion = { position, timeElapsed, volume, isPlaying in
             self.position = position
             self.timeElapsed = timeElapsed
             self.volume = volume
