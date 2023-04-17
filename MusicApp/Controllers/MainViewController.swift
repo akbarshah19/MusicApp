@@ -60,7 +60,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return button
     }()
     
-    private let playPauseButton: UIButton = {
+    let playPauseButton: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
         button.tintColor = UIColor(named: "greenTint")
@@ -77,8 +77,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .mainBgColor
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.backgroundColor = .mainBgColor
         tableView.layer.cornerRadius = 10
         tableView.register(UINib(nibName: "TableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
@@ -217,36 +215,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         showHero(vc)
     }
     
-    @objc func didTapPlayPause() {
-        if player?.isPlaying == true {
-            playPauseButton.setBackgroundImage(UIImage(systemName: "play.circle.fill"), for: .normal)
-            player?.pause()
-            timer.invalidate()
-        } else {
-            playPauseButton.setBackgroundImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
-            player?.play()
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCount), userInfo: nil, repeats: true)
-        }
-    }
-    
-    @objc func didTapNext() {
-        if position < (songs.count - 1) {
-            timeElapsed = 0.0
-            position = position + 1
-            player?.stop()
-            configure()
-        }
-    }
-    
-    @objc func didTapBack() {
-        if position > 0 {
-            timeElapsed = 0.0
-            position = position - 1
-            player?.stop()
-            configure()
-        }
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return songs.count
     }
@@ -257,7 +225,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.myImage.image = UIImage(named: song.imageName)
         cell.myLabel.text = song.name
         cell.myAlbum.text = song.artistName
-        cell.playbackTIme.text = timeFormatter(interval: totalTime)
         return cell
     }
     
@@ -278,10 +245,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.isPlaying = isPlaying
             self.tableView.reloadData()
             self.configure()
-            
-            if isPlaying {
-                self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerCount), userInfo: nil, repeats: true)
-            }
+            if isPlaying {self.startTimer()}
         }
         tableView.heroID = "table"
         vc.view.heroID = "table"
@@ -289,5 +253,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         showHero(vc)
         
         playerView.isHidden = false
+    }
+    
+    func startTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerCount), userInfo: nil, repeats: true)
     }
 }

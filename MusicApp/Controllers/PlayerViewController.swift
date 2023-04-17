@@ -28,8 +28,10 @@ class PlayerViewController: UIViewController {
     let playPauseBtn = UIButton()
     let nextBtn = UIButton()
     let backBtn = UIButton()
+    var volumeView = UIView()
+    var speakerButton = UIButton()
 
-    private let dismissBtn: UIButton = {
+    let dismissBtn: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "chevron.compact.down"), for: .normal)
         button.layer.masksToBounds = true
@@ -67,9 +69,9 @@ class PlayerViewController: UIViewController {
         return label
     }()
     
-    private var progressView = UIProgressView()
-    private var timeCount = UILabel()
-    private var timeLeft = UILabel()
+    var progressView = UIProgressView()
+    var timeCount = UILabel()
+    var timeLeft = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,8 +82,20 @@ class PlayerViewController: UIViewController {
         if holder.subviews.count == 0 {
             configure()
         }
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCount), userInfo: nil, repeats: true)
+        startTimer()
         progressView.progress = Float(timeElapsed/totalTime)
+        
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(didTapDismiss))
+        swipeDown.direction = .down
+        albumImage.addGestureRecognizer(swipeDown)
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(didTapNext))
+        swipeRight.direction = .right
+        albumImage.addGestureRecognizer(swipeRight)
+        
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(didTapBack))
+        swipeLeft.direction = .left
+        albumImage.addGestureRecognizer(swipeLeft)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,31 +115,6 @@ class PlayerViewController: UIViewController {
         view?.hero.isEnabled = false
     }
     
-    @objc func timerCount() {
-        if timeElapsed != totalTime && timeElapsed < totalTime {
-            timeElapsed += 1
-            progressView.progress += 1/Float(totalTime)
-            
-            if timeElapsed < 10 {
-                timeCount.text = "0:0\(timeFormatter(interval: timeElapsed))"
-            } else if timeElapsed <= 59 {
-                timeCount.text = "0:\(timeFormatter(interval: timeElapsed))"
-            } else {
-                timeCount.text = timeFormatter(interval: timeElapsed)
-            }
-            
-            if totalTime - timeElapsed < 10 {
-                timeLeft.text = "-0:0\(timeFormatter(interval: totalTime - timeElapsed))"
-            } else if totalTime - timeElapsed < 60 {
-                timeLeft.text = "-0:\(timeFormatter(interval: totalTime - timeElapsed))"
-            } else {
-                timeLeft.text = "-\(timeFormatter(interval: totalTime - timeElapsed))"
-            }
-        } else {
-            resetPlayer()
-        }
-    }
-    
     func configure() {
         let song = songs[position]
         let urlString = Bundle.main.path(forResource: song.trackName, ofType: "mp3")
@@ -141,13 +130,7 @@ class PlayerViewController: UIViewController {
             }
             totalTime = Double(round(player.duration))
             player.volume = volume
-            
-            let shortStartDelay: TimeInterval = 0.05 // seconds
-            let now: TimeInterval = player.deviceCurrentTime
-            let timeDelayPlay: TimeInterval = now + shortStartDelay
-            
-            player.currentTime = timeElapsed // Specific time to start play
-            player.play(atTime: timeDelayPlay)
+            playAt(timeElapsed)
             
         } catch {
             print("Error occured!")
@@ -241,7 +224,7 @@ class PlayerViewController: UIViewController {
         let shuffleButton = UIButton(frame: CGRect(x: loopButton.left - 2*30 - 26, y: playPauseBtn.bottom + 30, width: 26, height: 20))
 
         let likeButton = UIButton(frame: CGRect(x: holder.width/2 + 30, y: playPauseBtn.bottom + 30, width: 26, height: 20))
-        let speakerButton = UIButton(frame: CGRect(x: likeButton.right + 2*30, y: playPauseBtn.bottom + 30, width: 26, height: 20))
+        speakerButton = UIButton(frame: CGRect(x: likeButton.right + 2*30, y: playPauseBtn.bottom + 30, width: 26, height: 20))
         
         shuffleButton.setBackgroundImage(UIImage(systemName: "shuffle"), for: .normal)
         likeButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
@@ -253,116 +236,57 @@ class PlayerViewController: UIViewController {
         loopButton.tintColor = .label
         speakerButton.tintColor = .label
         
+        speakerButton.addTarget(self, action: #selector(didTapSpeaker), for: .touchUpInside)
+        
         holder.addSubview(shuffleButton)
         holder.addSubview(likeButton)
         holder.addSubview(loopButton)
         holder.addSubview(speakerButton)
         
+        //Volume view
+        volumeView = UIView(frame: CGRect(x: 30, y: speakerButton.bottom + 15, width: holder.width - 60, height: 40))
+        volumeView.isHidden = true
+        volumeView.backgroundColor = .secondarySystemBackground
+        volumeView.layer.cornerRadius = volumeView.height/2
+        volumeView.layer.borderColor = UIColor(named: "greenTint")?.cgColor
+        volumeView.layer.borderWidth = 1
+        holder.addSubview(volumeView)
+        
         //Slider
-        let volumeSlider = UISlider(frame: CGRect(x: 60, y: likeButton.bottom + 15, width: holder.width - 120, height: 20))
+        let muteButton = UIButton(frame: CGRect(x: volumeView.right - 20 - 20 - 30, y: volumeView.height/2 - 10, width: 20, height: 20))
+        muteButton.setBackgroundImage(UIImage(systemName: "speaker.slash"), for: .normal)
+        let volumeDownImage = UIImageView(frame: CGRect(x: volumeView.left - 30 + 10, y: volumeView.height/2 - 2, width: 20, height: 4))
+        volumeDownImage.image = UIImage(systemName: "minus")
+        let volumeUpImage = UIImageView(frame: CGRect(x: muteButton.left - 10 - 30, y: volumeView.height/2 - 8, width: 20, height: 16))
+        volumeUpImage.image = UIImage(systemName: "plus")
+        
+        let volumeSlider = UISlider(frame: CGRect(x: volumeDownImage.right + 5,
+                                                  y: volumeView.height/2 - 10,
+                                                  width: (volumeView.width - 60) - volumeDownImage.left - 40 - 10,
+                                                  height: 20))
         volumeSlider.tintColor = UIColor(named: "greenTint")
         volumeSlider.setThumbImage(UIImage(systemName: "circle.fill"), for: .normal)
         volumeSlider.value = 0.5
         volumeSlider.addTarget(self, action: #selector(didSlideSlider(_ :)), for: .valueChanged)
-        holder.addSubview(volumeSlider)
         
-        let volumeUpImage = UIImageView(frame: CGRect(x: volumeSlider.left - 35, y: volumeSlider.bottom - 20, width: 30, height: 20))
-        volumeUpImage.image = UIImage(systemName: "speaker.minus.fill")
-        let volumeDownImage = UIImageView(frame: CGRect(x: volumeSlider.right + 5, y: volumeSlider.bottom - 20, width: 30, height: 20))
-        volumeDownImage.image = UIImage(systemName: "speaker.plus.fill")
-        
+        muteButton.tintColor = .label
         volumeUpImage.tintColor = .label
         volumeDownImage.tintColor = .label
         
-        holder.addSubview(volumeUpImage)
-        holder.addSubview(volumeDownImage)
+        volumeView.addSubview(muteButton)
+        volumeView.addSubview(volumeSlider)
+        volumeView.addSubview(volumeUpImage)
+        volumeView.addSubview(volumeDownImage)
     }
     
-    @objc func didTapForward() {
-        let shortStartDelay: TimeInterval = 0.05 // seconds
-        let now: TimeInterval = player?.deviceCurrentTime ?? 0
-        let timeDelayPlay: TimeInterval = now + shortStartDelay
-        
-        if timeElapsed > totalTime {
-            resetPlayer()
-        } else {
-            timeElapsed += 15
-            progressView.progress = Float(timeElapsed/totalTime)
-        }
-        
-        player?.currentTime = timeElapsed // Specific time to start play
-        player?.play(atTime: timeDelayPlay)
-    }
-    
-    @objc func didTapBackward() {
-        let shortStartDelay: TimeInterval = 0.05 // seconds
-        let now: TimeInterval = player?.deviceCurrentTime ?? 0
-        let timeDelayPlay: TimeInterval = now + shortStartDelay
-                
-        if timeElapsed < 15 {
-            timeElapsed = 0
-            progressView.progress = 0
-        } else {
-            timeElapsed -= 15
-            progressView.progress = Float(timeElapsed/totalTime)
-        }
-        
-        player?.currentTime = timeElapsed // Specific time to start play
-        player?.play(atTime: timeDelayPlay)
-    }
-    
-    @objc func didTapDismiss() {
-        self.dismiss(animated: true)
-    }
-    
-    @objc func didTapBack() {
-        if position > 0 {
-            timeElapsed = 0.0
-            position = position - 1
-            player?.stop()
-            for subview in holder.subviews {
-                subview.removeFromSuperview()
-            }
-            configure()
-        }
-    }
-    @objc func didTapNext() {
-        if position < (songs.count - 1) {
-            timeElapsed = 0.0
-            position = position + 1
-            player?.stop()
-            for subview in holder.subviews {
-                subview.removeFromSuperview()
-            }
-            configure()
-        }
-    }
-    @objc func didTapPausePlay() {
-        if player?.isPlaying == true {
-            player?.pause()
-            timer.invalidate()
-            playPauseBtn.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
-            //shrink image
-            UIView.animate(withDuration: 0.2) { self.albumImage.frame = CGRect(x: 50,
-                                                                                   y: self.dismissBtn.bottom + 40,
-                                                                                   width: self.holder.width - 100,
-                                                                                   height: self.holder.width - 100)}
-        } else {
-            player?.play()
-            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCount), userInfo: nil, repeats: true)
-            playPauseBtn.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
-            //increase image
-            UIView.animate(withDuration: 0.2) { self.albumImage.frame = CGRect(x: 30,
-                                                                                   y: self.dismissBtn.bottom + 20,
-                                                                                   width: self.holder.width - 60,
-                                                                                   height: self.holder.width - 60)}
-        }
-    }
-    
-    @objc func didSlideSlider(_ slider: UISlider) {
-        volume = slider.value
-        player?.volume = volume
-    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+       {
+           let touch = touches.first
+           if touch?.view != self.volumeView {
+               volumeView.isHidden = true
+               speakerButton.setBackgroundImage(UIImage(systemName: "speaker.wave.1"), for: .normal)
+           }
+       }
     
     func resetPlayer() {
         player?.stop()
@@ -377,5 +301,18 @@ class PlayerViewController: UIViewController {
                                                                                y: self.dismissBtn.bottom + 40,
                                                                                width: self.holder.width - 100,
                                                                                height: self.holder.width - 100)}
+    }
+    
+    func startTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerCount), userInfo: nil, repeats: true)
+    }
+    
+    ///Plays audio at a specific time
+    func playAt(_ time: Double) {
+        let shortStartDelay: TimeInterval = 0.05 // seconds
+        let now: TimeInterval = player?.deviceCurrentTime ?? 0
+        let timeDelayPlay: TimeInterval = now + shortStartDelay
+        player?.currentTime = time // Specific time to start play
+        player?.play(atTime: timeDelayPlay)
     }
 }
