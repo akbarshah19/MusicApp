@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9DDB466E051DB0DBD0D649F5 /* Pods_MusicApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D2E3684AFF78F0DD17272 /* Pods_MusicApp.framework */; };
-		AD06F77D29EC7AA200F40CD0 /* EXT_MainVC_Targets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD06F77C29EC7AA200F40CD0 /* EXT_MainVC_Targets.swift */; };
-		AD06F77F29EC7ADD00F40CD0 /* EXT_PlayerVC_Targets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD06F77E29EC7ADD00F40CD0 /* EXT_PlayerVC_Targets.swift */; };
 		AD67C87629CB3297003E948E /* music1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87529CB3297003E948E /* music1.mp3 */; };
 		AD67C87829CB32A8003E948E /* music2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87729CB32A8003E948E /* music2.mp3 */; };
 		AD67C87A29CB32B3003E948E /* music3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87929CB32B3003E948E /* music3.mp3 */; };
@@ -19,7 +17,6 @@
 		AD81782B29CAD29B0057FCCB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD81782A29CAD29B0057FCCB /* AppDelegate.swift */; };
 		AD81782D29CAD29B0057FCCB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD81782C29CAD29B0057FCCB /* SceneDelegate.swift */; };
 		AD81782F29CAD29B0057FCCB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD81782E29CAD29B0057FCCB /* MainViewController.swift */; };
-		AD81783229CAD29B0057FCCB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD81783029CAD29B0057FCCB /* Main.storyboard */; };
 		AD81783429CAD29C0057FCCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD81783329CAD29C0057FCCB /* Assets.xcassets */; };
 		AD81783729CAD29C0057FCCB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD81783529CAD29C0057FCCB /* LaunchScreen.storyboard */; };
 		ADEFC7F829CC25C100C25088 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEFC7F729CC25C100C25088 /* PlayerViewController.swift */; };
@@ -29,8 +26,6 @@
 /* Begin PBXFileReference section */
 		6B65C11C73C6C1C8FBC47D30 /* Pods-MusicApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicApp.debug.xcconfig"; path = "Target Support Files/Pods-MusicApp/Pods-MusicApp.debug.xcconfig"; sourceTree = "<group>"; };
 		913D2E3684AFF78F0DD17272 /* Pods_MusicApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD06F77C29EC7AA200F40CD0 /* EXT_MainVC_Targets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXT_MainVC_Targets.swift; sourceTree = "<group>"; };
-		AD06F77E29EC7ADD00F40CD0 /* EXT_PlayerVC_Targets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXT_PlayerVC_Targets.swift; sourceTree = "<group>"; };
 		AD67C87529CB3297003E948E /* music1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music1.mp3; sourceTree = "<group>"; };
 		AD67C87729CB32A8003E948E /* music2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music2.mp3; sourceTree = "<group>"; };
 		AD67C87929CB32B3003E948E /* music3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music3.mp3; sourceTree = "<group>"; };
@@ -41,7 +36,6 @@
 		AD81782A29CAD29B0057FCCB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AD81782C29CAD29B0057FCCB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		AD81782E29CAD29B0057FCCB /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		AD81783129CAD29B0057FCCB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AD81783329CAD29C0057FCCB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AD81783629CAD29C0057FCCB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AD81783829CAD29C0057FCCB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -103,9 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				AD81782E29CAD29B0057FCCB /* MainViewController.swift */,
-				AD06F77C29EC7AA200F40CD0 /* EXT_MainVC_Targets.swift */,
 				ADEFC7F729CC25C100C25088 /* PlayerViewController.swift */,
-				AD06F77E29EC7ADD00F40CD0 /* EXT_PlayerVC_Targets.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -113,7 +105,6 @@
 		AD6E1E9E29E880C200254C10 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AD81783029CAD29B0057FCCB /* Main.storyboard */,
 				AD81783529CAD29C0057FCCB /* LaunchScreen.storyboard */,
 				AD81783329CAD29C0057FCCB /* Assets.xcassets */,
 				AD6E1E9F29E880DA00254C10 /* Cell */,
@@ -235,7 +226,6 @@
 				AD67C87A29CB32B3003E948E /* music3.mp3 in Resources */,
 				AD67C87629CB3297003E948E /* music1.mp3 in Resources */,
 				AD67C87829CB32A8003E948E /* music2.mp3 in Resources */,
-				AD81783229CAD29B0057FCCB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,28 +279,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD81782F29CAD29B0057FCCB /* MainViewController.swift in Sources */,
-				AD06F77D29EC7AA200F40CD0 /* EXT_MainVC_Targets.swift in Sources */,
 				ADEFC7FA29CC390100C25088 /* Extensions.swift in Sources */,
 				AD67C87D29CB386D003E948E /* TableViewCell.swift in Sources */,
 				AD6E1EA129E884D800254C10 /* SongModel.swift in Sources */,
 				AD81782B29CAD29B0057FCCB /* AppDelegate.swift in Sources */,
 				AD81782D29CAD29B0057FCCB /* SceneDelegate.swift in Sources */,
 				ADEFC7F829CC25C100C25088 /* PlayerViewController.swift in Sources */,
-				AD06F77F29EC7ADD00F40CD0 /* EXT_PlayerVC_Targets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		AD81783029CAD29B0057FCCB /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				AD81783129CAD29B0057FCCB /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		AD81783529CAD29C0057FCCB /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -449,7 +429,6 @@
 				INFOPLIST_FILE = MusicApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -478,7 +457,6 @@
 				INFOPLIST_FILE = MusicApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

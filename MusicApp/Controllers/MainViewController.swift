@@ -259,3 +259,36 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerCount), userInfo: nil, repeats: true)
     }
 }
+
+extension MainViewController {
+    
+    @objc func didTapPlayPause() {
+        if player?.isPlaying == true {
+            playPauseButton.setBackgroundImage(UIImage(systemName: "play.circle.fill"), for: .normal)
+            player?.pause()
+            timer.invalidate()
+        } else {
+            playPauseButton.setBackgroundImage(UIImage(systemName: "pause.circle.fill"), for: .normal)
+            player?.play()
+            startTimer()
+        }
+    }
+    
+    @objc func didTapNext() {
+        if position < (songs.count - 1) {
+            timeElapsed = 0.0
+            position = position + 1
+            player?.stop()
+            configure()
+        }
+    }
+    
+    @objc func didTapBack() {
+        if position > 0 {
+            timeElapsed = 0.0
+            position = position - 1
+            player?.stop()
+            configure()
+        }
+    }
+}
