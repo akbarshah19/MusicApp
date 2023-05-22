@@ -25,8 +25,8 @@ class HomeViewController: UIViewController {
         return table
     }()
     
-    private let subPlayer: SubPlayerView = {
-        let view = SubPlayerView()
+    private let subPlayer: HomeSubPlayerView = {
+        let view = HomeSubPlayerView()
         
         return view
     }()
@@ -121,6 +121,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let vc = PlayerViewController(position: indexPath.row, songs: songs)
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

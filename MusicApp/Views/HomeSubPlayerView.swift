@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SubPlayerView: UIView {
+class HomeSubPlayerView: UIView {
     
     public let playerImage: UIImageView = {
         let image = UIImageView()

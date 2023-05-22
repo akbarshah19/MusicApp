@@ -11,8 +11,18 @@ import Hero
 
 class PlayerViewController: UIViewController {
     
-    public var position: Int = 0
-    public var songs: [SongModel] = []
+    public var position: Int
+    public var songs: [SongModel]
+    
+    init(position: Int, songs: [SongModel]) {
+        self.position = position
+        self.songs = songs
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     var player: AVAudioPlayer?
     var timer = Timer()
@@ -22,16 +32,50 @@ class PlayerViewController: UIViewController {
     var volume: Float = 0.5
     var isPlaying: Bool = false
     var completion: ((Int, Double, Float, Bool) -> Void)?
+        
+    private let holder: UIView = {
+        let view = UIView()
+        return view
+    }()
     
-    @IBOutlet weak var holder: UIView!
+    private let playPauseBtn: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
+        button.tintColor = .label
+        return button
+    }()
     
-    let playPauseBtn = UIButton()
-    let nextBtn = UIButton()
-    let backBtn = UIButton()
-    var volumeView = UIView()
-    var speakerButton = UIButton()
+    private let nextBtn: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "forward.end.alt.fill"), for: .normal)
+        button.tintColor = .label
+        return button
+    }()
+    
+    private let backBtn: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "backward.end.alt.fill"), for: .normal)
+        button.tintColor = .label
+        return button
+    }()
+    
+    private let volumeView: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.backgroundColor = .secondarySystemBackground
+        button.layer.masksToBounds = true
+        
+        button.layer.borderColor = UIColor(named: "greenTint")?.cgColor
+        button.layer.borderWidth = 1
+        return button
+    }()
+    
+    private let speakerButton: UIButton = {
+        let button = UIButton()
+        return button
+    }()
 
-    let dismissBtn: UIButton = {
+    private let dismissBtn: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "chevron.compact.down"), for: .normal)
         button.layer.masksToBounds = true
@@ -52,6 +96,7 @@ class PlayerViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 24, weight: .heavy)
         return label
     }()
     
@@ -59,6 +104,7 @@ class PlayerViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 15, weight: .regular)
         return label
     }()
     
@@ -66,19 +112,38 @@ class PlayerViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 15, weight: .regular)
         return label
     }()
     
-    var progressView = UIProgressView()
-    var timeCount = UILabel()
-    var timeLeft = UILabel()
+    private var progressView: UIProgressView = {
+        let bar = UIProgressView()
+        bar.tintColor = UIColor(named: "greenTint")
+        bar.progress = 0.0
+        return bar
+    }()
+    
+    private let timeCount: UILabel = {
+        let label = UILabel()
+        label.text = "0:00"
+        label.font = .systemFont(ofSize: 12, weight: .regular)
+        return label
+    }()
+    
+    private let timeLeft: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .right
+        label.font = .systemFont(ofSize: 12, weight: .regular)
+        return label
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
         holder.backgroundColor = .clear
         blur(view, style: .prominent)
-        
+        view.addSubview(holder)
+        holder.frame = view.bounds
         if holder.subviews.count == 0 {
             configure()
         }
@@ -103,47 +168,33 @@ class PlayerViewController: UIViewController {
         view?.hero.isEnabled = false
     }
     
-    func configure() {
-        let song = songs[position]
-        let urlString = Bundle.main.path(forResource: song.trackName, ofType: "mp3")
-        do {
-            try AVAudioSession.sharedInstance().setMode(.default)
-            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-            guard let urlString = urlString else {
-                return
-            }
-            player = try AVAudioPlayer(contentsOf: URL(string: urlString)!)
-            guard let player = player else {
-                return
-            }
-            totalTime = Double(round(player.duration))
-            player.volume = volume
-            playAt(timeElapsed)
-            
-        } catch {
-            print("Error occured!")
-        }
-        
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         dismissBtn.frame = CGRect(x: holder.width/2 - 25, y: 10, width: 50, height: 20)
-        dismissBtn.addTarget(self, action: #selector(didTapDismiss), for: .touchUpInside)
-        holder.addSubview(dismissBtn)
-        
         albumImage.frame = CGRect(x: 30, y: dismissBtn.bottom + 20, width: holder.width - 60, height: holder.width - 60)
-        albumImage.image = UIImage(named: song.imageName)
-        holder.addSubview(albumImage)
-        
-        //Labels
         albumLabel.frame = CGRect(x: 10, y: albumImage.bottom + 20, width: holder.width - 20, height: 17)
         songLabel.frame = CGRect(x: 10, y: albumLabel.bottom, width: holder.width - 20, height: 26)
         artistLabel.frame = CGRect(x: 10, y: songLabel.bottom, width: holder.width - 20, height: 17)
+        progressView.frame = CGRect(x: 20, y: artistLabel.bottom + 20, width: holder.width - 40, height: 30)
+        timeCount.frame = CGRect(x: 20, y: progressView.top + 10, width: 35, height: 12)
+        playPauseBtn.frame = CGRect(x: holder.width/2 - 20, y: progressView.bottom + 20, width: 40, height: 40)
+        nextBtn.frame = CGRect(x: playPauseBtn.right + 20, y: progressView.bottom + 20 + 10, width: 40, height: 20)
+        backBtn.frame = CGRect(x: playPauseBtn.left - 20 - 40, y: progressView.bottom + 20 + 10, width: 40, height: 20)
+        timeLeft.frame = CGRect(x: holder.width - 55, y: progressView.top + 10, width: 35, height: 12)
+        speakerButton = CGRect(x: likeButton.right + 2*30, y: playPauseBtn.bottom + 30, width: 26, height: 20)
+        volumeView = CGRect(x: 30, y: speakerButton.bottom + 15, width: holder.width - 60, height: 40)
+    }
+    
+    func configure() {
         
-        artistLabel.text = song.artistName
-        songLabel.text = song.name
-        albumLabel.text = song.albumName
         
-        artistLabel.font = .systemFont(ofSize: 15, weight: .regular)
-        songLabel.font = .systemFont(ofSize: 24, weight: .heavy)
-        albumLabel.font = .systemFont(ofSize: 15, weight: .regular)
+        dismissBtn.addTarget(self, action: #selector(didTapDismiss), for: .touchUpInside)
+        holder.addSubview(dismissBtn)
+        
+        holder.addSubview(albumImage)
+        
+        //Labels
+
         
         holder.addSubview(songLabel)
         holder.addSubview(albumLabel)
@@ -153,28 +204,18 @@ class PlayerViewController: UIViewController {
         playPauseBtn.addTarget(self, action: #selector(didTapPausePlay), for: .touchUpInside)
         nextBtn.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
         backBtn.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
-                
-        playPauseBtn.tintColor = .label
-        nextBtn.tintColor = .label
-        backBtn.tintColor = .label
-        
-        playPauseBtn.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
-        nextBtn.setBackgroundImage(UIImage(systemName: "forward.end.alt.fill"), for: .normal)
-        backBtn.setBackgroundImage(UIImage(systemName: "backward.end.alt.fill"), for: .normal)
-        
+
         //Progress View
-        progressView = UIProgressView(frame: CGRect(x: 20, y: artistLabel.bottom + 20, width: holder.width - 40, height: 30))
-        progressView.tintColor = UIColor(named: "greenTint")
-        progressView.progress = 0.0
+        
+
         holder.addSubview(progressView)
         
-        timeCount = UILabel(frame: CGRect(x: 20, y: progressView.top + 10, width: 35, height: 12))
-        timeCount.text = "0:00"
-        timeCount.font = .systemFont(ofSize: 12, weight: .regular)
+        
+
         holder.addSubview(timeCount)
         
-        timeLeft = UILabel(frame: CGRect(x: holder.width - 55, y: progressView.top + 10, width: 35, height: 12))
-        timeLeft.textAlignment = .right
+        
+        
         if totalTime < 10 {
             timeLeft.text = "-0:0\(timeFormatter(interval: totalTime))"
         } else if totalTime < 60 {
@@ -182,13 +223,10 @@ class PlayerViewController: UIViewController {
         } else {
             timeLeft.text = "-\(timeFormatter(interval: totalTime))"
         }
-        timeLeft.font = .systemFont(ofSize: 12, weight: .regular)
+        
         holder.addSubview(timeLeft)
         
         //Music Control
-        playPauseBtn.frame = CGRect(x: holder.width/2 - 20, y: progressView.bottom + 20, width: 40, height: 40)
-        nextBtn.frame = CGRect(x: playPauseBtn.right + 20, y: progressView.bottom + 20 + 10, width: 40, height: 20)
-        backBtn.frame = CGRect(x: playPauseBtn.left - 20 - 40, y: progressView.bottom + 20 + 10, width: 40, height: 20)
         
         let forward = UIButton(frame: CGRect(x: nextBtn.right + 15, y: progressView.bottom + 20 + 5, width: 30, height: 30))
         forward.setBackgroundImage(UIImage(systemName: "goforward.15"), for: .normal)
@@ -212,7 +250,6 @@ class PlayerViewController: UIViewController {
         let shuffleButton = UIButton(frame: CGRect(x: loopButton.left - 2*30 - 26, y: playPauseBtn.bottom + 30, width: 26, height: 20))
 
         let likeButton = UIButton(frame: CGRect(x: holder.width/2 + 30, y: playPauseBtn.bottom + 30, width: 26, height: 20))
-        speakerButton = UIButton(frame: CGRect(x: likeButton.right + 2*30, y: playPauseBtn.bottom + 30, width: 26, height: 20))
         
         shuffleButton.setBackgroundImage(UIImage(systemName: "shuffle"), for: .normal)
         likeButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
@@ -230,41 +267,6 @@ class PlayerViewController: UIViewController {
         holder.addSubview(likeButton)
         holder.addSubview(loopButton)
         holder.addSubview(speakerButton)
-        
-        //Volume view
-        volumeView = UIView(frame: CGRect(x: 30, y: speakerButton.bottom + 15, width: holder.width - 60, height: 40))
-        volumeView.isHidden = true
-        volumeView.backgroundColor = .secondarySystemBackground
-        volumeView.layer.cornerRadius = volumeView.height/2
-        volumeView.layer.borderColor = UIColor(named: "greenTint")?.cgColor
-        volumeView.layer.borderWidth = 1
-        holder.addSubview(volumeView)
-        
-        //Slider
-        let muteButton = UIButton(frame: CGRect(x: volumeView.right - 20 - 20 - 30, y: volumeView.height/2 - 10, width: 20, height: 20))
-        muteButton.setBackgroundImage(UIImage(systemName: "speaker.slash"), for: .normal)
-        let volumeDownImage = UIImageView(frame: CGRect(x: volumeView.left - 30 + 10, y: volumeView.height/2 - 2, width: 20, height: 4))
-        volumeDownImage.image = UIImage(systemName: "minus")
-        let volumeUpImage = UIImageView(frame: CGRect(x: muteButton.left - 10 - 30, y: volumeView.height/2 - 8, width: 20, height: 16))
-        volumeUpImage.image = UIImage(systemName: "plus")
-        
-        let volumeSlider = UISlider(frame: CGRect(x: volumeDownImage.right + 5,
-                                                  y: volumeView.height/2 - 10,
-                                                  width: (volumeView.width - 60) - volumeDownImage.left - 40 - 10,
-                                                  height: 20))
-        volumeSlider.tintColor = UIColor(named: "greenTint")
-        volumeSlider.setThumbImage(UIImage(systemName: "circle.fill"), for: .normal)
-        volumeSlider.value = 0.5
-        volumeSlider.addTarget(self, action: #selector(didSlideSlider(_ :)), for: .valueChanged)
-        
-        muteButton.tintColor = .label
-        volumeUpImage.tintColor = .label
-        volumeDownImage.tintColor = .label
-        
-        volumeView.addSubview(muteButton)
-        volumeView.addSubview(volumeSlider)
-        volumeView.addSubview(volumeUpImage)
-        volumeView.addSubview(volumeDownImage)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
