@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		9DDB466E051DB0DBD0D649F5 /* Pods_MusicApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 913D2E3684AFF78F0DD17272 /* Pods_MusicApp.framework */; };
+		AD18D2802A1A324500C81543 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD18D27F2A1A324500C81543 /* HomeTableViewCell.swift */; };
+		AD18D2822A1A3A4100C81543 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD18D2812A1A3A4100C81543 /* HomeViewController.swift */; };
+		AD27962E2A1B53A900496923 /* SubPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD27962D2A1B53A900496923 /* SubPlayerView.swift */; };
 		AD67C87629CB3297003E948E /* music1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87529CB3297003E948E /* music1.mp3 */; };
 		AD67C87829CB32A8003E948E /* music2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87729CB32A8003E948E /* music2.mp3 */; };
 		AD67C87A29CB32B3003E948E /* music3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87929CB32B3003E948E /* music3.mp3 */; };
-		AD67C87D29CB386D003E948E /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD67C87B29CB386D003E948E /* TableViewCell.swift */; };
-		AD67C87E29CB386D003E948E /* TableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87C29CB386D003E948E /* TableViewCell.xib */; };
 		AD6E1EA129E884D800254C10 /* SongModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6E1EA029E884D800254C10 /* SongModel.swift */; };
 		AD81782B29CAD29B0057FCCB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD81782A29CAD29B0057FCCB /* AppDelegate.swift */; };
 		AD81782D29CAD29B0057FCCB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD81782C29CAD29B0057FCCB /* SceneDelegate.swift */; };
@@ -26,11 +27,12 @@
 /* Begin PBXFileReference section */
 		6B65C11C73C6C1C8FBC47D30 /* Pods-MusicApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicApp.debug.xcconfig"; path = "Target Support Files/Pods-MusicApp/Pods-MusicApp.debug.xcconfig"; sourceTree = "<group>"; };
 		913D2E3684AFF78F0DD17272 /* Pods_MusicApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD18D27F2A1A324500C81543 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		AD18D2812A1A3A4100C81543 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		AD27962D2A1B53A900496923 /* SubPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubPlayerView.swift; sourceTree = "<group>"; };
 		AD67C87529CB3297003E948E /* music1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music1.mp3; sourceTree = "<group>"; };
 		AD67C87729CB32A8003E948E /* music2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music2.mp3; sourceTree = "<group>"; };
 		AD67C87929CB32B3003E948E /* music3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music3.mp3; sourceTree = "<group>"; };
-		AD67C87B29CB386D003E948E /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
-		AD67C87C29CB386D003E948E /* TableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableViewCell.xib; sourceTree = "<group>"; };
 		AD6E1EA029E884D800254C10 /* SongModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongModel.swift; sourceTree = "<group>"; };
 		AD81782729CAD29B0057FCCB /* MusicApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD81782A29CAD29B0057FCCB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 		AD6E1E9D29E880AB00254C10 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				AD18D2812A1A3A4100C81543 /* HomeViewController.swift */,
 				AD81782E29CAD29B0057FCCB /* MainViewController.swift */,
 				ADEFC7F729CC25C100C25088 /* PlayerViewController.swift */,
 			);
@@ -107,18 +110,10 @@
 			children = (
 				AD81783529CAD29C0057FCCB /* LaunchScreen.storyboard */,
 				AD81783329CAD29C0057FCCB /* Assets.xcassets */,
-				AD6E1E9F29E880DA00254C10 /* Cell */,
+				AD18D27F2A1A324500C81543 /* HomeTableViewCell.swift */,
+				AD27962D2A1B53A900496923 /* SubPlayerView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		AD6E1E9F29E880DA00254C10 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				AD67C87B29CB386D003E948E /* TableViewCell.swift */,
-				AD67C87C29CB386D003E948E /* TableViewCell.xib */,
-			);
-			path = Cell;
 			sourceTree = "<group>";
 		};
 		AD6E1EA229E884DC00254C10 /* Models */ = {
@@ -222,7 +217,6 @@
 			files = (
 				AD81783729CAD29C0057FCCB /* LaunchScreen.storyboard in Resources */,
 				AD81783429CAD29C0057FCCB /* Assets.xcassets in Resources */,
-				AD67C87E29CB386D003E948E /* TableViewCell.xib in Resources */,
 				AD67C87A29CB32B3003E948E /* music3.mp3 in Resources */,
 				AD67C87629CB3297003E948E /* music1.mp3 in Resources */,
 				AD67C87829CB32A8003E948E /* music2.mp3 in Resources */,
@@ -280,11 +274,13 @@
 			files = (
 				AD81782F29CAD29B0057FCCB /* MainViewController.swift in Sources */,
 				ADEFC7FA29CC390100C25088 /* Extensions.swift in Sources */,
-				AD67C87D29CB386D003E948E /* TableViewCell.swift in Sources */,
+				AD18D2802A1A324500C81543 /* HomeTableViewCell.swift in Sources */,
+				AD18D2822A1A3A4100C81543 /* HomeViewController.swift in Sources */,
 				AD6E1EA129E884D800254C10 /* SongModel.swift in Sources */,
 				AD81782B29CAD29B0057FCCB /* AppDelegate.swift in Sources */,
 				AD81782D29CAD29B0057FCCB /* SceneDelegate.swift in Sources */,
 				ADEFC7F829CC25C100C25088 /* PlayerViewController.swift in Sources */,
+				AD27962E2A1B53A900496923 /* SubPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,20 +16,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
          
-        let vc = MainViewController()
+        let vc = HomeViewController()
         let nav = UINavigationController(rootViewController: vc)
-         
-//         if AuthManager.shared.isSignedIn {
-//             vc = TabBarViewController()
-//         } else {
-//             let signUpVC = SignInViewController()
-//             signUpVC.navigationItem.largeTitleDisplayMode = .always
-//             let nav = UINavigationController(rootViewController: signUpVC)
-//             nav.navigationBar.prefersLargeTitles = true
-//             vc = nav
-//         }
-         
-        window.rootViewController = nav // Update VC to SignIn if not signed in
+        vc.title = "MusicApp"
+        nav.navigationItem.largeTitleDisplayMode = .always
+        nav.navigationBar.prefersLargeTitles = true
+        
+        window.rootViewController = nav
         window.makeKeyAndVisible()
         self.window = window
     }

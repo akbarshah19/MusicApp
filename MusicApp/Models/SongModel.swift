@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Song {
+struct SongModel {
     let name: String
     let albumName: String
     let artistName: String

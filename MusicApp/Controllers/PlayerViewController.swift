@@ -12,7 +12,7 @@ import Hero
 class PlayerViewController: UIViewController {
     
     public var position: Int = 0
-    public var songs: [Song] = []
+    public var songs: [SongModel] = []
     
     var player: AVAudioPlayer?
     var timer = Timer()
