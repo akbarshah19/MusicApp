@@ -11,6 +11,7 @@
 		AD18D2802A1A324500C81543 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD18D27F2A1A324500C81543 /* HomeTableViewCell.swift */; };
 		AD18D2822A1A3A4100C81543 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD18D2812A1A3A4100C81543 /* HomeViewController.swift */; };
 		AD27962E2A1B53A900496923 /* HomeSubPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD27962D2A1B53A900496923 /* HomeSubPlayerView.swift */; };
+		AD5200042A21370000AE25A0 /* PlayerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5200032A21370000AE25A0 /* PlayerHeaderView.swift */; };
 		AD67C87629CB3297003E948E /* music1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87529CB3297003E948E /* music1.mp3 */; };
 		AD67C87829CB32A8003E948E /* music2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87729CB32A8003E948E /* music2.mp3 */; };
 		AD67C87A29CB32B3003E948E /* music3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AD67C87929CB32B3003E948E /* music3.mp3 */; };
@@ -32,6 +33,7 @@
 		AD18D27F2A1A324500C81543 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		AD18D2812A1A3A4100C81543 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		AD27962D2A1B53A900496923 /* HomeSubPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSubPlayerView.swift; sourceTree = "<group>"; };
+		AD5200032A21370000AE25A0 /* PlayerHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerHeaderView.swift; sourceTree = "<group>"; };
 		AD67C87529CB3297003E948E /* music1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music1.mp3; sourceTree = "<group>"; };
 		AD67C87729CB32A8003E948E /* music2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music2.mp3; sourceTree = "<group>"; };
 		AD67C87929CB32B3003E948E /* music3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music3.mp3; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				AD27962D2A1B53A900496923 /* HomeSubPlayerView.swift */,
 				ADA739602A1BA02700990764 /* PlayerVolumeControlView.swift */,
 				ADA739622A1BA5BA00990764 /* PlayerCenterControlView.swift */,
+				AD5200032A21370000AE25A0 /* PlayerHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				AD18D2802A1A324500C81543 /* HomeTableViewCell.swift in Sources */,
 				AD18D2822A1A3A4100C81543 /* HomeViewController.swift in Sources */,
 				AD6E1EA129E884D800254C10 /* SongModel.swift in Sources */,
+				AD5200042A21370000AE25A0 /* PlayerHeaderView.swift in Sources */,
 				AD81782B29CAD29B0057FCCB /* AppDelegate.swift in Sources */,
 				AD81782D29CAD29B0057FCCB /* SceneDelegate.swift in Sources */,
 				ADA739612A1BA02700990764 /* PlayerVolumeControlView.swift in Sources */,
