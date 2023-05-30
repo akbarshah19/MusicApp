@@ -118,9 +118,9 @@
 				AD81783329CAD29C0057FCCB /* Assets.xcassets */,
 				AD18D27F2A1A324500C81543 /* HomeTableViewCell.swift */,
 				AD27962D2A1B53A900496923 /* HomeSubPlayerView.swift */,
-				ADA739602A1BA02700990764 /* PlayerVolumeControlView.swift */,
-				ADA739622A1BA5BA00990764 /* PlayerCenterControlView.swift */,
 				AD5200032A21370000AE25A0 /* PlayerHeaderView.swift */,
+				ADA739622A1BA5BA00990764 /* PlayerCenterControlView.swift */,
+				ADA739602A1BA02700990764 /* PlayerVolumeControlView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

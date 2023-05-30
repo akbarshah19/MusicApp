@@ -38,51 +38,9 @@ class PlayerViewController: UIViewController {
         return view
     }()
     
-    private let playPauseBtn: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
-        button.tintColor = .label
-        return button
-    }()
     
-    private let nextBtn: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(systemName: "forward.end.alt.fill"), for: .normal)
-        button.tintColor = .label
-        return button
-    }()
     
-    private let backBtn: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(systemName: "backward.end.alt.fill"), for: .normal)
-        button.tintColor = .label
-        return button
-    }()
     
-    private let volumeView: UIButton = {
-        let button = UIButton()
-        button.isHidden = true
-        button.backgroundColor = .secondarySystemBackground
-        button.layer.masksToBounds = true
-        
-        button.layer.borderColor = UIColor(named: "greenTint")?.cgColor
-        button.layer.borderWidth = 1
-        return button
-    }()
-    
-    private let speakerButton: UIButton = {
-        let button = UIButton()
-        return button
-    }()
-
-    private let dismissBtn: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(systemName: "chevron.compact.down"), for: .normal)
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = 8
-        button.tintColor = .lightGray
-        return button
-    }()
     
     let albumImage: UIImageView = {
         let image = UIImageView()
@@ -193,28 +151,16 @@ class PlayerViewController: UIViewController {
         
         holder.addSubview(albumImage)
         
-        //Labels
-
-        
         holder.addSubview(songLabel)
         holder.addSubview(albumLabel)
         holder.addSubview(artistLabel)
         
-        //Buttons
         playPauseBtn.addTarget(self, action: #selector(didTapPausePlay), for: .touchUpInside)
         nextBtn.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
         backBtn.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
 
-        //Progress View
-        
-
         holder.addSubview(progressView)
-        
-        
-
         holder.addSubview(timeCount)
-        
-        
         
         if totalTime < 10 {
             timeLeft.text = "-0:0\(timeFormatter(interval: totalTime))"
@@ -225,9 +171,7 @@ class PlayerViewController: UIViewController {
         }
         
         holder.addSubview(timeLeft)
-        
-        //Music Control
-        
+
         let forward = UIButton(frame: CGRect(x: nextBtn.right + 15, y: progressView.bottom + 20 + 5, width: 30, height: 30))
         forward.setBackgroundImage(UIImage(systemName: "goforward.15"), for: .normal)
         forward.addTarget(self, action: #selector(didTapForward), for: .touchUpInside)
@@ -245,7 +189,6 @@ class PlayerViewController: UIViewController {
         holder.addSubview(forward)
         holder.addSubview(backward)
         
-        //Additional Buttons
         let loopButton = UIButton(frame: CGRect(x: holder.width/2 - 30 - 26, y: playPauseBtn.bottom + 30, width: 26, height: 20))
         let shuffleButton = UIButton(frame: CGRect(x: loopButton.left - 2*30 - 26, y: playPauseBtn.bottom + 30, width: 26, height: 20))
 
