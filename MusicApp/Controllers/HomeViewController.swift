@@ -11,13 +11,30 @@ import Hero
 
 class HomeViewController: UIViewController {
     var player: AVAudioPlayer?
-    var songs = [SongModel]()
+    
+    var songs: [SongModel] = [
+        SongModel(name: "Call out my name",
+                  albumName: "My Dear Melancholy",
+                  artistName: "The Weeknd",
+                  imageName: "cover1",
+                  trackName: "music1"),
+        SongModel(name: "The Hills",
+                  albumName: "Madness",
+                  artistName: "The Weeknd",
+                  imageName: "cover2",
+                  trackName: "music2"),
+        SongModel(name: "Creepin",
+                  albumName: "Featured Song",
+                  artistName: "The Weeknd",
+                  imageName: "cover3",
+                  trackName: "music3")
+    ]
+    
     var position: Int = 0
-    var timer = Timer()
     var timeElapsed: Double = 0
     var totalTime: Double = 0
     var volume: Float = 0
-    var isPlaying: Bool = false
+    var isPlaying: Bool = true
     
     private let tableView: UITableView = {
         let table = UITableView()
@@ -31,71 +48,30 @@ class HomeViewController: UIViewController {
         return view
     }()
     
+    var timer = Timer()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureSongs()
         view.backgroundColor = .secondarySystemBackground
+        addSubviews()
         tableView.delegate = self
         tableView.dataSource = self
-        
-        addSubviews()
     }
     
-    private func configureSongs() {
-        songs.append(SongModel(name: "Call out my name",
-                          albumName: "My Dear Melancholy",
-                          artistName: "The Weeknd",
-                          imageName: "cover1",
-                          trackName: "music1"))
-        songs.append(SongModel(name: "The Hills",
-                          albumName: "Madness",
-                          artistName: "The Weeknd",
-                          imageName: "cover2",
-                          trackName: "music2"))
-        songs.append(SongModel(name: "Creepin",
-                          albumName: "Featured Song",
-                          artistName: "The Weeknd",
-                          imageName: "cover3",
-                          trackName: "music3"))
-    }
-    
-    private func configure() {
-        let song = songs[position]
-        let urlString = Bundle.main.path(forResource: song.trackName, ofType: "mp3")
+    private func configure(with position: Int) {
+        let urlString = Bundle.main.path(forResource: songs[position].trackName, ofType: "mp3")
         do {
             try AVAudioSession.sharedInstance().setMode(.default)
             try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-
-            guard let urlString = urlString else {
-                return print("URL error")
-            }
-
+            guard let urlString = urlString else { return print("Audio URL error!") }
             player = try AVAudioPlayer(contentsOf: URL(string: urlString)!)
-            guard let player = player else {
-                return print("Player error")
-            }
-
-            totalTime = Double(round(player.duration))
-            player.volume = volume
-            subPlayer.playerName.text = song.name
-            subPlayer.playerArtist.text = song.artistName
-            subPlayer.playerImage.image = UIImage(named: song.imageName)
-
-            let shortStartDelay: TimeInterval = 0.05 // seconds
-            let now: TimeInterval = player.deviceCurrentTime
-            let timeDelayPlay: TimeInterval = now + shortStartDelay
-
-            if isPlaying {
-                player.currentTime = timeElapsed // Specific time to start play
-                player.play(atTime: timeDelayPlay)
-            } else {
-                player.pause()
-                subPlayer.playPauseButton.setBackgroundImage(UIImage(systemName: "play.circle.fill"), for: .normal)
-            }
+            guard let player = player else { return print("Player error occured.") }
+            player.play()
         } catch {
             print("Error occured!")
         }
     }
+    
     private func addSubviews() {
         view.addSubview(tableView)
         view.addSubview(subPlayer)
@@ -123,6 +99,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource  {
         tableView.deselectRow(at: indexPath, animated: true)
         let vc = PlayerViewController(position: indexPath.row, songs: songs)
         vc.modalPresentationStyle = .fullScreen
+        configure(with: indexPath.row)
         present(vc, animated: true)
     }
     

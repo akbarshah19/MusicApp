@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol PlayerCenterControlViewDelegate: AnyObject {
+    func didTapPause()
+}
+
 class PlayerCenterControlView: UIView {
+    var delegate: PlayerCenterControlViewDelegate?
+    
     private let playPauseBtn: UIButton = {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
@@ -53,4 +59,81 @@ class PlayerCenterControlView: UIView {
         button.tintColor = .lightGray
         return button
     }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        clipsToBounds = true
+        addSubviews()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func addSubviews() {
+        addSubview(playPauseBtn)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        playPauseBtn.center = center
+        playPauseBtn.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+    }
+    
+
+    
+//    @objc func didTapBackward() {
+//        if timeElapsed < 15 {
+//            timeElapsed = 0
+//            progressView.progress = 0
+//        } else {
+//            timeElapsed -= 15
+//            progressView.progress = Float(timeElapsed/totalTime)
+//        }
+//        playAt(timeElapsed)
+//    }
+//
+//    @objc func didTapForward() {
+//        if timeElapsed > totalTime {
+//            resetPlayer()
+//        } else {
+//            timeElapsed += 15
+//            progressView.progress = Float(timeElapsed/totalTime)
+//        }
+//        playAt(timeElapsed)
+//    }
+//
+//    @objc func didTapBack() {
+//        if position > 0 {
+//            timeElapsed = 0.0
+//            position = position - 1
+//            player?.stop()
+//            for subview in holder.subviews {
+//                subview.removeFromSuperview()
+//            }
+//            configure()
+//        }
+//    }
+//
+//    @objc func didTapPausePlay() {
+//        if player?.isPlaying == true {
+//            player?.pause()
+//            timer.invalidate()
+//            playPauseBtn.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
+//            //shrink image
+//            UIView.animate(withDuration: 0.2) { self.albumImage.frame = CGRect(x: 50,
+//                                                                                   y: self.dismissBtn.bottom + 40,
+//                                                                                   width: self.holder.width - 100,
+//                                                                                   height: self.holder.width - 100)}
+//        } else {
+//            player?.play()
+//            startTimer()
+//            playPauseBtn.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
+//            //increase image
+//            UIView.animate(withDuration: 0.2) { self.albumImage.frame = CGRect(x: 30,
+//                                                                                   y: self.dismissBtn.bottom + 20,
+//                                                                                   width: self.holder.width - 60,
+//                                                                                   height: self.holder.width - 60)}
+//        }
+//    }
 }
