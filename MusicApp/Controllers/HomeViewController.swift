@@ -77,6 +77,11 @@ class HomeViewController: UIViewController {
         view.addSubview(subPlayer)
     }
     
+    private func addSubviews() {
+        view.addSubview(tableView)
+        view.addSubview(subPlayer)
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
