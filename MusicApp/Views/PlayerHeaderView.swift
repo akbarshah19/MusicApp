@@ -9,6 +9,12 @@ import UIKit
 
 class PlayerHeaderView: UIView {
 
+    let slider: UISlider = {
+        let slider = UISlider()
+        slider.setThumbImage(UIImage(systemName: "circle.fill"), for: .normal)
+        return slider
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = true
